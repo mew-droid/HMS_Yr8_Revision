@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latin Vocab Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #09091a;
+    --surface: #13132a;
+    --surface2: #1c1c3a;
+    --border: rgba(255,255,255,0.08);
+    --gold: #e8c96a;
+    --gold-dim: rgba(232,201,106,0.2);
+    --violet: #9b6dff;
+    --violet-dim: rgba(155,109,255,0.15);
+    --text: #e8e8f8;
+    --text-dim: #8888aa;
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.15);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.15);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 16px 48px;
+  }
+
+  #app {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* ---- SCREENS ---- */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ---- HEADER ---- */
+  .logo {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-top: 8px;
+  }
+  .logo h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .logo p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ---- CARDS ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  /* ---- BUTTONS ---- */
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .btn-primary {
+    background: var(--violet);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #8a5ef0; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #09091a;
+    font-weight: 600;
+  }
+  .btn-gold:hover { background: #f0d27a; transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { background: var(--surface2); border-color: rgba(255,255,255,0.2); }
+
+  .btn-small {
+    display: inline-block;
+    width: auto;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .btn-row .btn { flex: 1; }
+
+  /* ---- HOME SCREEN ---- */
+  .direction-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .direction-card:hover {
+    border-color: var(--violet);
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+  .direction-card.selected {
+    border-color: var(--violet);
+    background: var(--violet-dim);
+  }
+  .direction-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--gold-dim);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .direction-info h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .direction-info p {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* ---- CATEGORY SCREEN ---- */
+  .category-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .cat-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+  }
+  .cat-btn:hover {
+    border-color: var(--violet);
+    background: var(--surface2);
+  }
+  .cat-btn.selected {
+    border-color: var(--violet);
+    background: var(--violet-dim);
+  }
+  .cat-btn-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+  .cat-btn-name { font-size: 13px; font-weight: 600; display: block; }
+  .cat-btn-count { font-size: 11px; color: var(--text-dim); display: block; margin-top: 2px; }
+
+  .cat-btn-all {
+    grid-column: 1 / -1;
+    background: var(--gold-dim);
+    border-color: rgba(232,201,106,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+  }
+  .cat-btn-all:hover { background: rgba(232,201,106,0.3); border-color: var(--gold); }
+  .cat-btn-all.selected { background: rgba(232,201,106,0.3); border-color: var(--gold); }
+  .cat-btn-all .cat-btn-name { font-size: 15px; color: var(--gold); }
+
+  /* ---- QUIZ SCREEN ---- */
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .quiz-progress-text {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .streak-display {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .progress-bar-track {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 99px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--violet);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .question-card.correct { border-color: var(--green); background: var(--green-dim); }
+  .question-card.wrong { border-color: var(--red); background: var(--red-dim); }
+
+  .q-category-tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .q-prompt {
+    font-family: 'Cinzel', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .q-prompt.english-prompt {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .q-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .answer-area {
+    margin-bottom: 16px;
+  }
+  #answer-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+  #answer-input:focus { border-color: var(--violet); }
+  #answer-input.correct-input { border-color: var(--green); background: var(--green-dim); }
+  #answer-input.wrong-input { border-color: var(--red); background: var(--red-dim); }
+  #answer-input:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .feedback-box {
+    display: none;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .feedback-box.correct {
+    display: block;
+    background: var(--green-dim);
+    border: 1px solid var(--green);
+    color: var(--green);
+  }
+  .feedback-box.wrong {
+    display: block;
+    background: var(--red-dim);
+    border: 1px solid var(--red);
+    color: var(--text);
+  }
+  .feedback-box .correct-answer {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .feedback-box .all-answers {
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  /* ---- RESULTS SCREEN ---- */
+  .score-ring {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+  .score-ring svg {
+    transform: rotate(-90deg);
+    width: 120px;
+    height: 120px;
+  }
+  .score-ring-track { fill: none; stroke: var(--surface2); stroke-width: 8; }
+  .score-ring-fill {
+    fill: none;
+    stroke: var(--violet);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease;
+  }
+  .score-ring-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .score-ring-text .score-num {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+  .score-ring-text .score-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .result-message {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .result-message h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .result-message p {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .missed-words {
+    margin-bottom: 20px;
+  }
+  .missed-words h3 {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .missed-word-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+  .missed-word-latin {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 13px;
+  }
+  .missed-word-english { color: var(--text-dim); font-size: 13px; }
+
+  /* ---- BACK BUTTON ---- */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-dim);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0;
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .back-btn:hover { color: var(--text); }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* ---- SPARKLE ANIMATION ---- */
+  @keyframes pop-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop-in { animation: pop-in 0.3s ease forwards; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  .shake { animation: shake 0.4s ease; }
+
+  /* Particle effect */
+  .particles {
+    pointer-events: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 999;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: particle-fall 0.8s ease-out forwards;
+  }
+  @keyframes particle-fall {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-80px) scale(0); opacity: 0; }
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 380px) {
+    .q-prompt { font-size: 22px; }
+    .category-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- PARTICLES LAYER -->
+  <div class="particles" id="particles"></div>
+
+  <!-- SCREEN: HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="logo">
+      <h1>Vocabula Latina</h1>
+      <p>Year 8 Vocabulary Trainer</p>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Choose direction</p>
+      <div id="dir-latin-english" class="direction-card selected" onclick="selectDirection('latin-english')">
+        <div class="direction-icon">🏛️</div>
+        <div class="direction-info">
+          <h3>Latin &rarr; English</h3>
+          <p>See the Latin word &bull; type the meaning</p>
+        </div>
+      </div>
+      <div id="dir-english-latin" class="direction-card" onclick="selectDirection('english-latin')">
+        <div class="direction-icon">✍️</div>
+        <div class="direction-info">
+          <h3>English &rarr; Latin</h3>
+          <p>See the meaning &bull; type the Latin</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-gold" onclick="goToCategory()" style="margin-top:4px;">Choose topic &rarr;</button>
+  </div>
+
+  <!-- SCREEN: CATEGORY -->
+  <div class="screen" id="screen-category">
+    <button class="back-btn" onclick="showScreen('screen-home')">&#8592; Back</button>
+    <div class="logo">
+      <h1>Vocabula Latina</h1>
+      <p>Choose a topic to practise</p>
+    </div>
+
+    <div class="category-grid">
+      <button class="cat-btn cat-btn-all selected" id="cat-all" onclick="selectCategory('all')">
+        <span class="cat-btn-icon">⚡</span>
+        <span class="cat-btn-name">All words</span>
+        <span class="cat-btn-count">73 words</span>
+      </button>
+      <button class="cat-btn" id="cat-verbs" onclick="selectCategory('verbs')">
+        <span class="cat-btn-icon">⚔️</span>
+        <span class="cat-btn-name">Verbs</span>
+        <span class="cat-btn-count">21 words</span>
+      </button>
+      <button class="cat-btn" id="cat-perfect" onclick="selectCategory('perfect')">
+        <span class="cat-btn-icon">🏆</span>
+        <span class="cat-btn-name">Perfect tense</span>
+        <span class="cat-btn-count">9 forms</span>
+      </button>
+      <button class="cat-btn" id="cat-nouns" onclick="selectCategory('nouns')">
+        <span class="cat-btn-icon">🏔️</span>
+        <span class="cat-btn-name">Nouns</span>
+        <span class="cat-btn-count">15 words</span>
+      </button>
+      <button class="cat-btn" id="cat-adjectives" onclick="selectCategory('adjectives')">
+        <span class="cat-btn-icon">🌟</span>
+        <span class="cat-btn-name">Adjectives</span>
+        <span class="cat-btn-count">10 words</span>
+      </button>
+      <button class="cat-btn" id="cat-prepositions" onclick="selectCategory('prepositions')">
+        <span class="cat-btn-icon">➡️</span>
+        <span class="cat-btn-name">Prepositions</span>
+        <span class="cat-btn-count">11 words</span>
+      </button>
+      <button class="cat-btn" id="cat-adverbs" onclick="selectCategory('adverbs')">
+        <span class="cat-btn-icon">💨</span>
+        <span class="cat-btn-name">Adverbs</span>
+        <span class="cat-btn-count">7 words</span>
+      </button>
+    </div>
+
+    <button class="btn btn-gold" onclick="startQuiz()">Start quiz &rarr;</button>
+  </div>
+
+  <!-- SCREEN: QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <button class="back-btn" onclick="showScreen('screen-category')">&#8592; Change topic</button>
+
+    <div class="quiz-header">
+      <span class="quiz-progress-text" id="progress-text">1 / 10</span>
+      <span class="streak-display" id="streak-display">🔥 0 streak</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <p class="q-category-tag" id="q-cat-tag">verb</p>
+      <p class="q-prompt" id="q-prompt">pugnō</p>
+      <p class="q-sub" id="q-sub">type the English meaning</p>
+    </div>
+
+    <div class="answer-area">
+      <input
+        type="text"
+        id="answer-input"
+        placeholder="Type your answer here..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      />
+    </div>
+
+    <div class="feedback-box" id="feedback-box"></div>
+
+    <div id="submit-area">
+      <button class="btn btn-primary" id="submit-btn" onclick="submitAnswer()">Check &rarr;</button>
+    </div>
+    <div id="next-area" style="display:none;">
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: RESULTS -->
+  <div class="screen" id="screen-results">
+    <div class="logo" style="margin-bottom:20px;">
+      <h1>Vocabula Latina</h1>
+    </div>
+
+    <div class="score-ring">
+      <svg viewBox="0 0 120 120">
+        <circle class="score-ring-track" cx="60" cy="60" r="52"/>
+        <circle class="score-ring-fill" id="score-circle" cx="60" cy="60" r="52"
+          stroke-dasharray="326.7"
+          stroke-dashoffset="326.7"/>
+      </svg>
+      <div class="score-ring-text">
+        <span class="score-num" id="score-num">0</span>
+        <span class="score-label">correct</span>
+      </div>
+    </div>
+
+    <div class="result-message">
+      <h2 id="result-title">Well done!</h2>
+      <p id="result-sub">You answered X out of Y correctly.</p>
+    </div>
+
+    <div id="missed-section" class="missed-words">
+      <h3>Words to review</h3>
+      <div id="missed-list"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goHome()">Home</button>
+      <button class="btn btn-gold" onclick="retryMissed()" id="retry-missed-btn">Retry missed &rarr;</button>
+    </div>
+    <div style="margin-top:10px;">
+      <button class="btn btn-outline" onclick="startQuiz()">Try again (shuffled)</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// =============================================
+// VOCABULARY DATA
+// =============================================
+
+const vocab = [
+  // VERBS
+  { id:1,  latin:'pugnō',       fullLatin:'pugnō, pugnāre, pugnāvī',       meanings:['fight'],                              sub:'pugnō, pugnāre, pugnāvī',       category:'verbs',        latinAnswers:['pugno','pugna'] },
+  { id:2,  latin:'iubeō',       fullLatin:'iubeō, iubēre, iūssī',           meanings:['order'],                              sub:'iubeō, iubēre, iūssī',           category:'verbs',        latinAnswers:['iubeo','iube'] },
+  { id:3,  latin:'ascendō',     fullLatin:'ascendō, ascendere, ascendī',     meanings:['climb'],                              sub:'ascendō, ascendere, ascendī',     category:'verbs',        latinAnswers:['ascendo'] },
+  { id:4,  latin:'dēscendō',    fullLatin:'dēscendō, dēscendere, dēscendī', meanings:['go down','come down'],                 sub:'dēscendō, dēscendere, dēscendī', category:'verbs',        latinAnswers:['descendo'] },
+  { id:5,  latin:'petō',        fullLatin:'petō, petere, petīvī',            meanings:['make for','seek','beg','ask for'],     sub:'petō, petere, petīvī',           category:'verbs',        latinAnswers:['peto'] },
+  { id:6,  latin:'cōnspiciō',   fullLatin:'cōnspiciō, cōnspicere, cōnspexī',meanings:['catch sight of','notice'],            sub:'cōnspiciō, cōnspicere, cōnspexī', category:'verbs',       latinAnswers:['conspicio'] },
+  { id:7,  latin:'audiō',       fullLatin:'audiō, audīre, audīvī',           meanings:['hear','listen to'],                   sub:'audiō, audīre, audīvī',           category:'verbs',        latinAnswers:['audio'] },
+  { id:8,  latin:'possum',      fullLatin:'possum, posse, potuī',            meanings:['can','be able'],                      sub:'possum, posse, potuī',            category:'verbs',        latinAnswers:['possum'] },
+  { id:9,  latin:'amō',         fullLatin:'amō, amāre, amāvī',              meanings:['love','like'],                        sub:'amō, amāre, amāvī',               category:'verbs',        latinAnswers:['amo'] },
+  { id:10, latin:'lacrimō',     fullLatin:'lacrimō, lacrimāre, lacrimāvī',  meanings:['weep','cry'],                         sub:'lacrimō, lacrimāre, lacrimāvī',   category:'verbs',        latinAnswers:['lacrimo'] },
+  { id:11, latin:'laudō',       fullLatin:'laudō, laudāre, laudāvī',        meanings:['praise'],                             sub:'laudō, laudāre, laudāvī',         category:'verbs',        latinAnswers:['laudo'] },
+  { id:12, latin:'terreō',      fullLatin:'terreō, terrēre, terruī',        meanings:['frighten'],                           sub:'terreō, terrēre, terruī',         category:'verbs',        latinAnswers:['terreo'] },
+  { id:13, latin:'maneō',       fullLatin:'maneō, manēre, mānsī',           meanings:['remain','stay'],                      sub:'maneō, manēre, mānsī',            category:'verbs',        latinAnswers:['maneo'] },
+  { id:14, latin:'timeō',       fullLatin:'timeō, timēre, timuī',           meanings:['fear','be afraid'],                   sub:'timeō, timēre, timuī',            category:'verbs',        latinAnswers:['timeo'] },
+  { id:15, latin:'regō',        fullLatin:'regō, regere, rēxī',             meanings:['rule'],                               sub:'regō, regere, rēxī',              category:'verbs',        latinAnswers:['rego'] },
+  { id:16, latin:'currō',       fullLatin:'currō, currere, cucurrī',        meanings:['run'],                                sub:'currō, currere, cucurrī',         category:'verbs',        latinAnswers:['curro'] },
+  { id:17, latin:'vincō',       fullLatin:'vincō, vincere, vīcī',           meanings:['conquer','win','be victorious','defeat'], sub:'vincō, vincere, vīcī',      category:'verbs',        latinAnswers:['vinco'] },
+  { id:18, latin:'pūniō',       fullLatin:'pūniō, pūnīre, pūnīvī',         meanings:['punish'],                             sub:'pūniō, pūnīre, pūnīvī',           category:'verbs',        latinAnswers:['punio'] },
+  { id:19, latin:'iaciō',       fullLatin:'iaciō, iacere, iēcī',            meanings:['throw'],                              sub:'iaciō, iacere, iēcī',             category:'verbs',        latinAnswers:['iacio'] },
+  { id:20, latin:'interficiō',  fullLatin:'interficiō, interficere, interfēcī', meanings:['kill'],                          sub:'interficiō, interficere, interfēcī', category:'verbs',    latinAnswers:['interficio'] },
+  { id:21, latin:'capiō',       fullLatin:'capiō, capere, cēpī',            meanings:['take','capture'],                     sub:'capiō, capere, cēpī',             category:'verbs',        latinAnswers:['capio'] },
+
+  // PERFECT TENSE
+  { id:22, latin:'mānsī',       fullLatin:'mānsī',      meanings:['I remained','I stayed'],            sub:'perfect of maneō',         category:'perfect', latinAnswers:['mansi'] },
+  { id:23, latin:'īvī',         fullLatin:'īvī',        meanings:['I went'],                           sub:'perfect of eō',            category:'perfect', latinAnswers:['ivi'] },
+  { id:24, latin:'timuī',       fullLatin:'timuī',      meanings:['I feared','I was afraid'],          sub:'perfect of timeō',         category:'perfect', latinAnswers:['timui'] },
+  { id:25, latin:'cucurrī',     fullLatin:'cucurrī',    meanings:['I ran'],                            sub:'perfect of currō',         category:'perfect', latinAnswers:['cucurri'] },
+  { id:26, latin:'vīcī',        fullLatin:'vīcī',       meanings:['I conquered','I was victorious','I defeated'], sub:'perfect of vincō', category:'perfect', latinAnswers:['vici'] },
+  { id:27, latin:'iēcī',        fullLatin:'iēcī',       meanings:['I threw'],                          sub:'perfect of iaciō',         category:'perfect', latinAnswers:['ieci'] },
+  { id:28, latin:'interfēcī',   fullLatin:'interfēcī',  meanings:['I killed'],                         sub:'perfect of interficiō',    category:'perfect', latinAnswers:['interfeci'] },
+  { id:29, latin:'cēpī',        fullLatin:'cēpī',       meanings:['I captured','I took'],              sub:'perfect of capiō',         category:'perfect', latinAnswers:['cepi'] },
+  { id:30, latin:'inquit / inquiunt', fullLatin:'inquit, inquiunt', meanings:['he said','she said','they said'], sub:'used for speech', category:'perfect', latinAnswers:['inquit','inquiunt'] },
+
+  // NOUNS
+  { id:31, latin:'terra',       fullLatin:'terra, terr- 1f',        meanings:['ground','land','country'],  sub:'noun, 1st decl. f',      category:'nouns', latinAnswers:['terra'] },
+  { id:32, latin:'equus',       fullLatin:'equus, equ- 2m',         meanings:['horse'],                    sub:'noun, 2nd decl. m',      category:'nouns', latinAnswers:['equus'] },
+  { id:33, latin:'caelum',      fullLatin:'caelum, cael- 2n',       meanings:['sky','heaven'],             sub:'noun, 2nd decl. n',      category:'nouns', latinAnswers:['caelum'] },
+  { id:34, latin:'auxilium',    fullLatin:'auxilium, auxili- 2n',   meanings:['help'],                     sub:'noun, 2nd decl. n',      category:'nouns', latinAnswers:['auxilium'] },
+  { id:35, latin:'mōns',        fullLatin:'mōns, mont- 3m',         meanings:['mountain'],                 sub:'noun, 3rd decl. m',      category:'nouns', latinAnswers:['mons'] },
+  { id:36, latin:'mare',        fullLatin:'mare, mar- 3n',          meanings:['sea'],                      sub:'noun, 3rd decl. n',      category:'nouns', latinAnswers:['mare'] },
+  { id:37, latin:'silva',       fullLatin:'silva, silv- 1f',        meanings:['wood','forest'],            sub:'noun, 1st decl. f',      category:'nouns', latinAnswers:['silva'] },
+  { id:38, latin:'hasta',       fullLatin:'hasta, hast- 1f',        meanings:['spear'],                    sub:'noun, 1st decl. f',      category:'nouns', latinAnswers:['hasta'] },
+  { id:39, latin:'sagitta',     fullLatin:'sagitta, sagitt- 1f',    meanings:['arrow'],                    sub:'noun, 1st decl. f',      category:'nouns', latinAnswers:['sagitta'] },
+  { id:40, latin:'gladius',     fullLatin:'gladius, gladi- 2m',     meanings:['sword'],                    sub:'noun, 2nd decl. m',      category:'nouns', latinAnswers:['gladius'] },
+  { id:41, latin:'arma',        fullLatin:'arma, arm- 2n (plural)', meanings:['arms','weapons'],           sub:'noun, 2nd decl. n pl.',  category:'nouns', latinAnswers:['arma'] },
+  { id:42, latin:'bellum',      fullLatin:'bellum, bell- 2n',       meanings:['war'],                      sub:'noun, 2nd decl. n',      category:'nouns', latinAnswers:['bellum'] },
+  { id:43, latin:'perīculum',   fullLatin:'perīculum, perīcul- 2n', meanings:['danger'],                  sub:'noun, 2nd decl. n',      category:'nouns', latinAnswers:['periculum'] },
+  { id:44, latin:'corpus',      fullLatin:'corpus, corpor- 3n',     meanings:['body'],                     sub:'noun, 3rd decl. n',      category:'nouns', latinAnswers:['corpus'] },
+  { id:45, latin:'flūmen',      fullLatin:'flūmen, flūmin- 3n',     meanings:['river'],                    sub:'noun, 3rd decl. n',      category:'nouns', latinAnswers:['flumen'] },
+
+  // ADJECTIVES
+  { id:46, latin:'bonus',       fullLatin:'bonus, bona, bonum',     meanings:['good'],                     sub:'adj. 2-1-2',             category:'adjectives', latinAnswers:['bonus'] },
+  { id:47, latin:'magnus',      fullLatin:'magnus, magna, magnum',  meanings:['big','large','great'],       sub:'adj. 2-1-2',             category:'adjectives', latinAnswers:['magnus'] },
+  { id:48, latin:'malus',       fullLatin:'malus, mala, malum',     meanings:['evil','bad'],                sub:'adj. 2-1-2',             category:'adjectives', latinAnswers:['malus'] },
+  { id:49, latin:'difficilis',  fullLatin:'difficilis, difficil-',  meanings:['difficult'],                 sub:'adj. 3rd decl.',         category:'adjectives', latinAnswers:['difficilis'] },
+  { id:50, latin:'facilis',     fullLatin:'facilis, facil-',        meanings:['easy'],                      sub:'adj. 3rd decl.',         category:'adjectives', latinAnswers:['facilis'] },
+  { id:51, latin:'fēlīx',       fullLatin:'fēlīx, fēlīc-',         meanings:['fortunate','happy','lucky'], sub:'adj. 3rd decl.',         category:'adjectives', latinAnswers:['felix'] },
+  { id:52, latin:'Graecus',     fullLatin:'Graecus, Graeca, Graecum',meanings:['Greek'],                   sub:'adj. 2-1-2',             category:'adjectives', latinAnswers:['graecus'] },
+  { id:53, latin:'audāx',       fullLatin:'audāx, audāc-',          meanings:['bold','daring'],             sub:'adj. 3rd decl.',         category:'adjectives', latinAnswers:['audax'] },
+  { id:54, latin:'fortis',      fullLatin:'fortis, fort-',          meanings:['brave','strong'],            sub:'adj. 3rd decl.',         category:'adjectives', latinAnswers:['fortis'] },
+  { id:55, latin:'ingēns',      fullLatin:'ingēns, ingent-',        meanings:['huge'],                      sub:'adj. 3rd decl.',         category:'adjectives', latinAnswers:['ingens'] },
+
+  // PREPOSITIONS
+  { id:56, latin:'ā / ab',      fullLatin:'ā, ab + ablative',       meanings:['from','away from','by'],                sub:'+ ablative',             category:'prepositions', latinAnswers:['a','ab'] },
+  { id:57, latin:'cum',         fullLatin:'cum + ablative',         meanings:['with'],                                 sub:'+ ablative',             category:'prepositions', latinAnswers:['cum'] },
+  { id:58, latin:'dē',          fullLatin:'dē + ablative',          meanings:['from','down from','about'],             sub:'+ ablative',             category:'prepositions', latinAnswers:['de'] },
+  { id:59, latin:'ē / ex',      fullLatin:'ē, ex + ablative',       meanings:['from','out of','out from'],             sub:'+ ablative',             category:'prepositions', latinAnswers:['e','ex'] },
+  { id:60, latin:'in + ablative',fullLatin:'in + ablative',         meanings:['in','on'],                              sub:'+ ablative',             category:'prepositions', latinAnswers:['in + ablative','in+ablative'] },
+  { id:61, latin:'ad',          fullLatin:'ad + accusative',        meanings:['to','towards','at'],                    sub:'+ accusative',           category:'prepositions', latinAnswers:['ad'] },
+  { id:62, latin:'contrā',      fullLatin:'contrā + accusative',    meanings:['against'],                              sub:'+ accusative',           category:'prepositions', latinAnswers:['contra'] },
+  { id:63, latin:'in + accusative',fullLatin:'in + accusative',     meanings:['into'],                                 sub:'+ accusative',           category:'prepositions', latinAnswers:['in + accusative','in+accusative'] },
+  { id:64, latin:'per',         fullLatin:'per + accusative',       meanings:['through','along'],                      sub:'+ accusative',           category:'prepositions', latinAnswers:['per'] },
+  { id:65, latin:'prope',       fullLatin:'prope + accusative',     meanings:['near'],                                 sub:'+ accusative',           category:'prepositions', latinAnswers:['prope'] },
+  { id:66, latin:'trāns',       fullLatin:'trāns + accusative',     meanings:['across'],                               sub:'+ accusative',           category:'prepositions', latinAnswers:['trans'] },
+
+  // ADVERBS
+  { id:67, latin:'celeriter',   fullLatin:'celeriter', meanings:['quickly'],               sub:'adverb', category:'adverbs', latinAnswers:['celeriter'] },
+  { id:68, latin:'diū',         fullLatin:'diū',       meanings:['for a long time'],       sub:'adverb', category:'adverbs', latinAnswers:['diu'] },
+  { id:69, latin:'ōlim',        fullLatin:'ōlim',      meanings:['once','some time ago'],  sub:'adverb', category:'adverbs', latinAnswers:['olim'] },
+  { id:70, latin:'subitō',      fullLatin:'subitō',    meanings:['suddenly'],              sub:'adverb', category:'adverbs', latinAnswers:['subito'] },
+  { id:71, latin:'tandem',      fullLatin:'tandem',    meanings:['at last','finally'],     sub:'adverb', category:'adverbs', latinAnswers:['tandem'] },
+  { id:72, latin:'fortiter',    fullLatin:'fortiter',  meanings:['bravely'],               sub:'adverb', category:'adverbs', latinAnswers:['fortiter'] },
+  { id:73, latin:'nōn',         fullLatin:'nōn',       meanings:['not'],                   sub:'adverb', category:'adverbs', latinAnswers:['non'] },
+];
+
+// =============================================
+// GAME STATE
+// =============================================
+let direction = 'latin-english';  // or 'english-latin'
+let selectedCategory = 'all';
+let queue = [];
+let currentIndex = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let missed = [];
+let answered = false;
+
+// =============================================
+// UTILITIES
+// =============================================
+
+function removeMacrons(s) {
+  return s
+    .replace(/[āĀ]/g,'a').replace(/[ēĒ]/g,'e')
+    .replace(/[īĪ]/g,'i').replace(/[ōŌ]/g,'o')
+    .replace(/[ūŪ]/g,'u')
+    .toLowerCase().trim();
+}
+
+function norm(s) {
+  return removeMacrons(s).replace(/\s+/g,' ').replace(/[;,]/g,'');
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// =============================================
+// HOME / SETTINGS
+// =============================================
+
+function selectDirection(dir) {
+  direction = dir;
+  document.getElementById('dir-latin-english').classList.toggle('selected', dir === 'latin-english');
+  document.getElementById('dir-english-latin').classList.toggle('selected', dir === 'english-latin');
+}
+
+function goToCategory() {
+  showScreen('screen-category');
+}
+
+function selectCategory(cat) {
+  selectedCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('cat-' + cat).classList.add('selected');
+}
+
+// =============================================
+// QUIZ LOGIC
+// =============================================
+
+function getVocabForCategory(cat) {
+  if (cat === 'all') return vocab;
+  return vocab.filter(v => v.category === cat);
+}
+
+function startQuiz() {
+  const pool = getVocabForCategory(selectedCategory);
+  queue = shuffle(pool);
+  currentIndex = 0;
+  score = 0;
+  streak = 0;
+  bestStreak = 0;
+  missed = [];
+  answered = false;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const item = queue[currentIndex];
+  answered = false;
+
+  // Reset state
+  const qCard = document.getElementById('question-card');
+  qCard.classList.remove('correct','wrong');
+  const input = document.getElementById('answer-input');
+  input.value = '';
+  input.classList.remove('correct-input','wrong-input');
+  input.disabled = false;
+
+  document.getElementById('feedback-box').className = 'feedback-box';
+  document.getElementById('feedback-box').innerHTML = '';
+  document.getElementById('submit-area').style.display = 'block';
+  document.getElementById('next-area').style.display = 'none';
+
+  // Progress
+  const total = queue.length;
+  const pct = (currentIndex / total) * 100;
+  document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${total}`;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('streak-display').textContent = `🔥 ${streak} streak`;
+
+  // Category tag
+  const catNames = { verbs:'Verb', perfect:'Perfect tense', nouns:'Noun', adjectives:'Adjective', prepositions:'Preposition', adverbs:'Adverb' };
+  document.getElementById('q-cat-tag').textContent = catNames[item.category] || item.category;
+
+  // Question prompt
+  const promptEl = document.getElementById('q-prompt');
+  const subEl = document.getElementById('q-sub');
+
+  if (direction === 'latin-english') {
+    promptEl.textContent = item.latin;
+    promptEl.className = 'q-prompt';
+    subEl.textContent = 'type the English meaning';
+    input.placeholder = 'English meaning...';
+  } else {
+    // English to Latin - show first/primary meaning
+    const displayMeaning = item.meanings[0];
+    promptEl.textContent = displayMeaning;
+    promptEl.className = 'q-prompt english-prompt';
+    subEl.textContent = item.sub || 'type the Latin';
+    input.placeholder = 'Latin...';
+  }
+
+  // Focus input after brief delay
+  setTimeout(() => input.focus(), 80);
+}
+
+function checkAnswer() {
+  const item = queue[currentIndex];
+  const userRaw = document.getElementById('answer-input').value.trim();
+
+  if (!userRaw) return false; // empty
+
+  let correct = false;
+
+  if (direction === 'latin-english') {
+    // Accept any of the meanings
+    correct = item.meanings.some(m => norm(userRaw) === norm(m));
+    // Also accept partial match for multi-word meanings like "go down"
+    if (!correct) {
+      correct = item.meanings.some(m => norm(userRaw) === norm(m.split('/')[0]));
+    }
+  } else {
+    // Accept any of the latinAnswers (already macron-stripped)
+    correct = item.latinAnswers.some(a => norm(userRaw) === norm(a));
+    // Also check the full latin field (with macrons stripped)
+    if (!correct) {
+      correct = norm(userRaw) === norm(item.latin.split(',')[0]);
+    }
+  }
+
+  return correct;
+}
+
+function submitAnswer() {
+  if (answered) return;
+  const userRaw = document.getElementById('answer-input').value.trim();
+  if (!userRaw) {
+    // Shake the input
+    const input = document.getElementById('answer-input');
+    input.classList.add('shake');
+    setTimeout(() => input.classList.remove('shake'), 400);
+    return;
+  }
+  answered = true;
+
+  const item = queue[currentIndex];
+  const correct = checkAnswer();
+  const input = document.getElementById('answer-input');
+  const qCard = document.getElementById('question-card');
+  const fb = document.getElementById('feedback-box');
+
+  if (correct) {
+    score++;
+    streak++;
+    if (streak > bestStreak) bestStreak = streak;
+    input.classList.add('correct-input');
+    qCard.classList.add('correct');
+    fb.className = 'feedback-box correct pop-in';
+
+    const msgs = ['Correct! ✓', 'Exactly right! ✓', 'Perfect! ✓', 'That\'s it! ✓', 'Well done! ✓'];
+    const msg = msgs[Math.floor(Math.random() * msgs.length)];
+
+    if (direction === 'latin-english') {
+      const allMeanings = item.meanings.join(' / ');
+      fb.innerHTML = `<strong>${msg}</strong><div class="all-answers">All accepted: ${allMeanings}</div>`;
+    } else {
+      fb.innerHTML = `<strong>${msg}</strong><div class="all-answers">Latin: ${item.fullLatin}</div>`;
+    }
+
+    if (streak >= 3) spawnParticles();
+
+  } else {
+    streak = 0;
+    input.classList.add('wrong-input');
+    qCard.classList.add('wrong');
+    fb.className = 'feedback-box wrong pop-in';
+
+    if (direction === 'latin-english') {
+      const correct_ans = item.meanings[0];
+      const all = item.meanings.join(' / ');
+      fb.innerHTML = `Not quite. <span class="correct-answer">✓ ${correct_ans}</span><div class="all-answers">Also accepted: ${all}</div>`;
+    } else {
+      fb.innerHTML = `Not quite. <span class="correct-answer">✓ ${item.fullLatin}</span>`;
+    }
+
+    missed.push(item);
+  }
+
+  document.getElementById('streak-display').textContent = `🔥 ${streak} streak`;
+  input.disabled = true;
+  document.getElementById('submit-area').style.display = 'none';
+  document.getElementById('next-area').style.display = 'block';
+
+  // Last question? Change button text
+  if (currentIndex === queue.length - 1) {
+    document.getElementById('next-btn').textContent = 'See results →';
+  }
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= queue.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+// =============================================
+// RESULTS
+// =============================================
+
+function showResults() {
+  showScreen('screen-results');
+  const total = queue.length;
+  const pct = score / total;
+
+  // Score ring animation
+  const circumference = 326.7;
+  const circle = document.getElementById('score-circle');
+  circle.style.strokeDashoffset = circumference;
+  setTimeout(() => {
+    circle.style.strokeDashoffset = circumference - (circumference * pct);
+    if (pct >= 0.8) circle.style.stroke = 'var(--green)';
+    else if (pct >= 0.5) circle.style.stroke = 'var(--violet)';
+    else circle.style.stroke = 'var(--red)';
+  }, 100);
+
+  document.getElementById('score-num').textContent = score;
+  document.getElementById('result-sub').textContent = `You got ${score} out of ${total} correct.`;
+
+  const titles = [
+    [0.95, 'Optima! Perfectum!'],
+    [0.8,  'Bene! Well done!'],
+    [0.6,  'Almost there!'],
+    [0.4,  'Keep practising!'],
+    [0,    'More practice needed!'],
+  ];
+  for (const [threshold, title] of titles) {
+    if (pct >= threshold) {
+      document.getElementById('result-title').textContent = title;
+      break;
+    }
+  }
+
+  // Missed words
+  const missedSection = document.getElementById('missed-section');
+  const missedList = document.getElementById('missed-list');
+  const retryBtn = document.getElementById('retry-missed-btn');
+  missedList.innerHTML = '';
+
+  if (missed.length === 0) {
+    missedSection.style.display = 'none';
+    retryBtn.style.display = 'none';
+  } else {
+    missedSection.style.display = 'block';
+    retryBtn.style.display = 'block';
+    missed.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'missed-word-item';
+      div.innerHTML = `<span class="missed-word-latin">${item.fullLatin}</span><span class="missed-word-english">${item.meanings[0]}</span>`;
+      missedList.appendChild(div);
+    });
+  }
+}
+
+function retryMissed() {
+  if (missed.length === 0) return;
+  queue = shuffle([...missed]);
+  currentIndex = 0;
+  score = 0;
+  streak = 0;
+  missed = [];
+  answered = false;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function goHome() {
+  showScreen('screen-home');
+}
+
+// =============================================
+// PARTICLES
+// =============================================
+
+function spawnParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#e8c96a','#9b6dff','#34d399','#f8a4d8'];
+  const input = document.getElementById('answer-input');
+  const rect = input.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top;
+
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const x = cx + (Math.random() - 0.5) * 120;
+    p.style.cssText = `left:${x}px;top:${cy}px;background:${color};animation-delay:${Math.random()*0.2}s;animation-duration:${0.6+Math.random()*0.4}s`;
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 1200);
+  }
+}
+
+// =============================================
+// KEYBOARD HANDLER
+// =============================================
+
+document.getElementById('answer-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    if (!answered) {
+      submitAnswer();
+    } else {
+      nextQuestion();
+    }
+  }
+});
+
+// =============================================
+// INITIALISE
+// =============================================
+// Default selections already set in HTML
+</script>
+</body>
+</html>
