@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latina — Vocabulary Trainer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0e0c;
+      --surface: #1a1915;
+      --surface2: #222119;
+      --border: #2e2c26;
+      --amber: #c98e25;
+      --amber-light: #e8ad48;
+      --amber-dim: rgba(201,142,37,0.13);
+      --text: #e8e4d9;
+      --text-dim: #9a9080;
+      --text-muted: #5a5448;
+      --green: #4a7a50;
+      --green-light: #6faa76;
+      --red: #7a4038;
+      --red-light: #b06858;
+      --teal: #3a7070;
+      --teal-light: #5aabab;
+      --teal-dim: rgba(58,112,112,0.15);
+      --purple: #5a4a7a;
+      --purple-light: #9a80c8;
+      --purple-dim: rgba(90,74,122,0.15);
+      --radius: 14px;
+      --radius-sm: 9px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; font-size: 15px; }
+
+    /* HEADER */
+    header {
+      padding: 18px 32px; border-bottom: 1px solid var(--border);
+      background: var(--surface); display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 10;
+    }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--amber-light); letter-spacing: 0.06em; }
+    .logo-sub { font-size: 11px; color: var(--text-muted); font-weight: 300; letter-spacing: 0.04em; margin-top: 2px; }
+    .header-pill { background: var(--amber-dim); border: 1px solid var(--amber); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--amber-light); font-weight: 500; white-space: nowrap; }
+
+    /* NAV */
+    nav { display: flex; gap: 3px; padding: 12px 28px; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; }
+    nav::-webkit-scrollbar { display: none; }
+    .nav-btn { padding: 8px 18px; border-radius: var(--radius-sm); border: 1px solid transparent; background: none; color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s; white-space: nowrap; flex-shrink: 0; }
+    .nav-btn:hover { color: var(--text); background: var(--surface2); }
+    .nav-btn.active { background: var(--amber-dim); border-color: var(--amber); color: var(--amber-light); }
+
+    /* MAIN */
+    main { max-width: 780px; margin: 0 auto; padding: 32px 24px 60px; }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* PROGRESS BAR */
+    .bar-wrap { background: var(--surface2); border-radius: 4px; height: 5px; overflow: hidden; margin-bottom: 22px; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--amber-light)); border-radius: 4px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
+
+    /* SHARED QUIZ STYLES */
+    .quiz-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+    .score-display { font-size: 14px; color: var(--text-dim); }
+    .score-display strong { color: var(--amber-light); font-weight: 600; }
+    .filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filt-btn { padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border); background: none; color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.18s; }
+    .filt-btn.active { border-color: var(--amber); color: var(--amber-light); background: var(--amber-dim); }
+
+    .q-card { border-radius: var(--radius); border: 1px solid var(--border); padding: 36px 28px; text-align: center; margin-bottom: 18px; }
+    .q-card.vocab-card { background: var(--surface); }
+    .q-card.phrase-card { background: var(--surface); }
+    .q-card.civ-card { background: var(--surface); }
+
+    .q-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 14px; }
+    .q-word { font-family: 'Cormorant Garamond', serif; font-size: 50px; font-weight: 500; color: var(--amber-light); line-height: 1.2; }
+    .q-word.eng { font-family: 'DM Sans', sans-serif; font-size: 28px; font-weight: 500; color: var(--text); line-height: 1.4; }
+    .q-word.phrase-lat { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 500; color: var(--amber-light); font-style: italic; line-height: 1.3; }
+    .q-word.civ-q { font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 400; color: var(--text); line-height: 1.5; }
+    .q-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; color: var(--text-muted); margin-top: 6px; }
+    .q-badge { display: inline-block; margin-top: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 20px; border: 1px solid; }
+    .q-badge.lte { border-color: var(--teal); color: var(--teal-light); background: var(--teal-dim); }
+    .q-badge.etl { border-color: var(--purple); color: var(--purple-light); background: var(--purple-dim); }
+    .q-badge.cat-gods    { border-color: #b08040; color: #d4a860; background: rgba(176,128,64,0.13); }
+    .q-badge.cat-house   { border-color: #607060; color: #90a890; background: rgba(96,112,96,0.13); }
+    .q-badge.cat-forum   { border-color: #406080; color: #7090b0; background: rgba(64,96,128,0.13); }
+    .q-badge.cat-baths   { border-color: #404080; color: #7070b0; background: rgba(64,64,128,0.13); }
+    .q-badge.cat-general { border-color: #705060; color: #a08090; background: rgba(112,80,96,0.13); }
+
+    .opts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .opt-btn { padding: 16px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.18s; text-align: center; line-height: 1.4; }
+    .opt-btn:hover:not(:disabled) { border-color: var(--amber); background: var(--amber-dim); }
+    .opt-btn.correct { border-color: var(--green-light); background: rgba(111,170,118,0.15); color: var(--green-light); }
+    .opt-btn.wrong   { border-color: var(--red-light);   background: rgba(176,104,88,0.15);  color: var(--red-light); }
+    .opt-btn:disabled { cursor: default; }
+    .opt-btn.lat-opt { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; }
+
+    .feedback-line { min-height: 20px; text-align: center; font-size: 14px; margin-bottom: 14px; }
+    .feedback-line.ok  { color: var(--green-light); }
+    .feedback-line.bad { color: var(--red-light); }
+
+    .next-btn { width: 100%; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--amber); background: var(--amber-dim); color: var(--amber-light); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.18s; display: none; }
+    .next-btn:hover { background: rgba(201,142,37,0.25); }
+    .next-btn.show { display: block; }
+
+    .end-screen { text-align: center; padding: 56px 0; display: none; }
+    .end-screen.show { display: block; }
+    .end-big { font-family: 'Cormorant Garamond', serif; font-size: 84px; font-weight: 600; color: var(--amber-light); line-height: 1; }
+    .end-msg { color: var(--text-dim); font-size: 16px; margin: 10px 0 32px; }
+    .retry-btn { padding: 13px 40px; border-radius: var(--radius-sm); border: 1px solid var(--amber); background: var(--amber-dim); color: var(--amber-light); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.18s; }
+    .retry-btn:hover { background: rgba(201,142,37,0.25); }
+
+    /* FLASHCARD-SPECIFIC */
+    .fc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+    .fc-counter { font-size: 13px; color: var(--text-dim); }
+    .flip-wrap { perspective: 1400px; margin-bottom: 18px; }
+    .flip-card { width: 100%; height: 272px; position: relative; transform-style: preserve-3d; transition: transform 0.48s cubic-bezier(.4,0,.2,1); cursor: pointer; }
+    .flip-card.flipped { transform: rotateY(180deg); }
+    .card-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px; user-select: none; }
+    .card-front { background: var(--surface); }
+    .card-back  { background: var(--surface2); transform: rotateY(180deg); }
+    .card-badge-fc { position: absolute; top: 14px; right: 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); background: var(--bg); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); }
+    .mastery-dot { position: absolute; top: 16px; left: 16px; width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+    .mastery-dot.mastered { background: var(--green-light); }
+    .card-hint { position: absolute; bottom: 13px; font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; }
+    .card-latin-main { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 500; color: var(--amber-light); text-align: center; line-height: 1.15; margin-bottom: 6px; }
+    .card-extra { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; color: var(--text-muted); text-align: center; }
+    .card-eng { font-size: 28px; font-weight: 500; color: var(--text); text-align: center; margin-bottom: 10px; line-height: 1.3; }
+    .card-full { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--text-muted); text-align: center; }
+    .fc-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .arrow-btn { width: 54px; height: 46px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text-dim); font-size: 18px; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; }
+    .arrow-btn:hover:not(:disabled) { border-color: var(--amber); color: var(--amber-light); }
+    .arrow-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .shuffle-btn { flex: 1; height: 46px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text-dim); font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.18s; }
+    .shuffle-btn:hover { border-color: var(--text-dim); color: var(--text); }
+    .mark-btns { display: flex; gap: 10px; }
+    .mark-btn { flex: 1; padding: 13px; border-radius: var(--radius-sm); border: 1px solid; background: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.18s; }
+    .mark-learning { border-color: var(--red-light); color: var(--red-light); }
+    .mark-learning:hover { background: rgba(176,104,88,0.15); }
+    .mark-mastered { border-color: var(--green-light); color: var(--green-light); }
+    .mark-mastered:hover { background: rgba(111,170,118,0.15); }
+    .no-cards-msg { text-align: center; color: var(--text-dim); padding: 44px 0; font-size: 15px; display: none; }
+
+    /* PROGRESS VIEW */
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 50px; font-weight: 600; color: var(--amber-light); line-height: 1; }
+    .stat-num.green { color: var(--green-light); }
+    .stat-num.red   { color: var(--red-light); }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-top: 6px; }
+    .pct-label { text-align: center; font-size: 13px; color: var(--text-dim); margin-bottom: 28px; }
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .list-section h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 10px; }
+    .word-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 22px; }
+    .word-row { display: flex; align-items: center; gap: 10px; padding: 10px 13px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .w-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--border); }
+    .w-dot.mastered { background: var(--green-light); }
+    .w-latin { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: var(--amber-light); flex: 1; }
+    .w-eng { font-size: 12px; color: var(--text-dim); }
+    .reset-btn { padding: 10px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: none; color: var(--text-muted); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.18s; }
+    .reset-btn:hover { border-color: var(--red-light); color: var(--red-light); }
+
+    /* SECTION INTRO */
+    .section-intro { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px; }
+    .section-intro p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+    .section-intro strong { color: var(--text); font-weight: 500; }
+
+    @media (max-width: 560px) {
+      main { padding: 20px 12px 48px; }
+      nav { padding: 10px 12px; }
+      header { padding: 14px 12px; }
+      .opts-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .word-grid { grid-template-columns: 1fr; }
+      .card-latin-main { font-size: 34px; }
+      .q-word { font-size: 36px; }
+      .q-word.phrase-lat { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Latina</div>
+    <div class="logo-sub">vocabulary trainer</div>
+  </div>
+  <div class="header-pill" id="headerPill">0 / 30 mastered</div>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="showView('flashcards', this)">Flashcards</button>
+  <button class="nav-btn"        onclick="showView('vocab-quiz', this)">Word Quiz</button>
+  <button class="nav-btn"        onclick="showView('phrases', this)">Phrases</button>
+  <button class="nav-btn"        onclick="showView('civ', this)">Civilisation</button>
+  <button class="nav-btn"        onclick="showView('progress', this)">Progress</button>
+</nav>
+
+<main>
+
+  <!-- ===== FLASHCARDS ===== -->
+  <div class="view active" id="view-flashcards">
+    <div class="fc-top">
+      <span class="fc-counter" id="fcCounter">Card 1 of 30</span>
+      <div class="filter-row">
+        <button class="filt-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filt-btn"        onclick="setFilter('learning', this)">Still learning</button>
+        <button class="filt-btn"        onclick="setFilter('mastered', this)">Mastered</button>
+      </div>
+    </div>
+    <div class="bar-wrap"><div class="bar-fill" id="fcBar" style="width:3.3%"></div></div>
+    <div id="noCards" class="no-cards-msg">No cards in this filter. Try another.</div>
+    <div id="fcDeck">
+      <div class="flip-wrap" onclick="flipCard()">
+        <div class="flip-card" id="flipCard">
+          <div class="card-face card-front">
+            <div class="mastery-dot" id="dotFront"></div>
+            <div class="card-badge-fc" id="badgeFront">verb</div>
+            <div class="card-latin-main" id="fcLatin">pugnō</div>
+            <div class="card-extra"      id="fcExtra">pugnāre, pugnāvī</div>
+            <div class="card-hint">tap to reveal</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="mastery-dot" id="dotBack"></div>
+            <div class="card-badge-fc" id="badgeBack">verb</div>
+            <div class="card-eng"  id="fcEnglish">fight</div>
+            <div class="card-full" id="fcFull">pugnō, pugnāre, pugnāvī</div>
+            <div class="card-hint">tap to hide</div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-nav">
+        <button class="arrow-btn" id="prevBtn" onclick="prevCard()">←</button>
+        <button class="shuffle-btn" onclick="shuffleCards()">⇌ Shuffle</button>
+        <button class="arrow-btn" id="nextBtn" onclick="nextCard()">→</button>
+      </div>
+      <div class="mark-btns">
+        <button class="mark-btn mark-learning" onclick="markCard(false)">✗ Still learning</button>
+        <button class="mark-btn mark-mastered" onclick="markCard(true)">✓ Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WORD QUIZ ===== -->
+  <div class="view" id="view-vocab-quiz">
+    <div class="quiz-top">
+      <div class="score-display">Score: <strong id="vqScore">0</strong> / <strong id="vqTotal">0</strong></div>
+      <div class="filter-row">
+        <button class="filt-btn active" onclick="setVqDir('lte', this)">Latin → English</button>
+        <button class="filt-btn"        onclick="setVqDir('etl', this)">English → Latin</button>
+      </div>
+    </div>
+    <div id="vqMain">
+      <div class="bar-wrap"><div class="bar-fill" id="vqBar" style="width:0%"></div></div>
+      <div class="q-card vocab-card">
+        <div class="q-label"  id="vqLabel">What does this mean in English?</div>
+        <div class="q-word"   id="vqWord">—</div>
+        <div class="q-sub"    id="vqSub"></div>
+      </div>
+      <div class="opts-grid" id="vqOpts"></div>
+      <div class="feedback-line" id="vqFeedback"></div>
+      <button class="next-btn" id="vqNextBtn" onclick="vqNext()">Next question →</button>
+    </div>
+    <div class="end-screen" id="vqEnd">
+      <div class="end-big" id="vqEndScore">0/30</div>
+      <div class="end-msg"  id="vqEndMsg">Keep practising!</div>
+      <button class="retry-btn" onclick="startVq()">Try again</button>
+    </div>
+  </div>
+
+  <!-- ===== PHRASES ===== -->
+  <div class="view" id="view-phrases">
+    <div class="section-intro">
+      <p>Short phrases using your vocabulary. Work out the meaning from the words you know. <strong>Latin → English</strong> asks you to translate a Latin phrase; <strong>English → Latin</strong> asks you to choose the correct Latin.</p>
+    </div>
+    <div class="quiz-top">
+      <div class="score-display">Score: <strong id="phScore">0</strong> / <strong id="phTotal">0</strong></div>
+      <div class="filter-row">
+        <button class="filt-btn active" onclick="setPhFilter('all', this)">All</button>
+        <button class="filt-btn"        onclick="setPhFilter('lte', this)">Latin → English</button>
+        <button class="filt-btn"        onclick="setPhFilter('etl', this)">English → Latin</button>
+      </div>
+    </div>
+    <div id="phMain">
+      <div class="bar-wrap"><div class="bar-fill" id="phBar" style="width:0%"></div></div>
+      <div class="q-card phrase-card">
+        <div class="q-label" id="phLabel">Translate into English:</div>
+        <div class="q-word phrase-lat" id="phWord">—</div>
+        <div id="phBadge"></div>
+      </div>
+      <div class="opts-grid" id="phOpts"></div>
+      <div class="feedback-line" id="phFeedback"></div>
+      <button class="next-btn" id="phNextBtn" onclick="phNext()">Next question →</button>
+    </div>
+    <div class="end-screen" id="phEnd">
+      <div class="end-big" id="phEndScore">0/21</div>
+      <div class="end-msg"  id="phEndMsg">Keep practising!</div>
+      <button class="retry-btn" onclick="startPh()">Try again</button>
+    </div>
+  </div>
+
+  <!-- ===== CIVILISATION ===== -->
+  <div class="view" id="view-civ">
+    <div class="section-intro">
+      <p>Knowledge checks on Roman civilisation: <strong>gods</strong>, <strong>Roman houses</strong>, <strong>the Forum and public life</strong>, and <strong>general Roman culture</strong>. Use the filter to focus on one topic at a time.</p>
+    </div>
+    <div class="quiz-top">
+      <div class="score-display">Score: <strong id="civScore">0</strong> / <strong id="civTotal">0</strong></div>
+      <div class="filter-row">
+        <button class="filt-btn active" onclick="setCivFilter('all', this)">All</button>
+        <button class="filt-btn"        onclick="setCivFilter('gods', this)">Gods</button>
+        <button class="filt-btn"        onclick="setCivFilter('house', this)">Houses</button>
+        <button class="filt-btn"        onclick="setCivFilter('forum', this)">Forum &amp; Baths</button>
+        <button class="filt-btn"        onclick="setCivFilter('general', this)">General</button>
+      </div>
+    </div>
+    <div id="civMain">
+      <div class="bar-wrap"><div class="bar-fill" id="civBar" style="width:0%"></div></div>
+      <div class="q-card civ-card">
+        <div class="q-label" id="civLabel">Roman civilisation</div>
+        <div class="q-word civ-q" id="civWord">—</div>
+        <div id="civBadge"></div>
+      </div>
+      <div class="opts-grid" id="civOpts"></div>
+      <div class="feedback-line" id="civFeedback"></div>
+      <button class="next-btn" id="civNextBtn" onclick="civNext()">Next question →</button>
+    </div>
+    <div class="end-screen" id="civEnd">
+      <div class="end-big" id="civEndScore">0/38</div>
+      <div class="end-msg"  id="civEndMsg">Keep practising!</div>
+      <button class="retry-btn" onclick="startCiv()">Try again</button>
+    </div>
+  </div>
+
+  <!-- ===== PROGRESS ===== -->
+  <div class="view" id="view-progress">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num">30</div><div class="stat-label">Total words</div></div>
+      <div class="stat-card"><div class="stat-num green" id="pMastered">0</div><div class="stat-label">Mastered</div></div>
+      <div class="stat-card"><div class="stat-num red"   id="pLearning">30</div><div class="stat-label">Still learning</div></div>
+    </div>
+    <div class="bar-wrap" style="height:9px"><div class="bar-fill" id="pBar" style="width:0%"></div></div>
+    <div class="pct-label" id="pPct">0% complete</div>
+    <hr class="divider">
+    <div class="list-section">
+      <h3>Mastered</h3>
+      <div class="word-grid" id="masteredGrid">
+        <p style="color:var(--text-muted);font-size:13px;grid-column:1/-1">Nothing mastered yet — start with the flashcards!</p>
+      </div>
+    </div>
+    <div class="list-section">
+      <h3>Still learning</h3>
+      <div class="word-grid" id="learningGrid"></div>
+    </div>
+    <div style="text-align:center;margin-top:8px">
+      <button class="reset-btn" onclick="resetAll()">Reset all progress</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ========================================================
+   DATA
+   ======================================================== */
+
+const VOCAB = [
+  { id:0,  latin:'pugnō',      display:'pugnō, pugnāre, pugnāvī',           extra:'pugnāre, pugnāvī',           english:'fight',                    cat:'verb' },
+  { id:1,  latin:'iubeō',      display:'iubeō, iubēre, iūssī',              extra:'iubēre, iūssī',               english:'order',                    cat:'verb' },
+  { id:2,  latin:'ascendō',    display:'ascendō, ascendere, ascendī',        extra:'ascendere, ascendī',          english:'climb',                    cat:'verb' },
+  { id:3,  latin:'dēscendō',   display:'dēscendō, dēscendere, dēscendī',    extra:'dēscendere, dēscendī',        english:'go down; come down',       cat:'verb' },
+  { id:4,  latin:'petō',       display:'petō, petere, petīvī',              extra:'petere, petīvī',              english:'make for; seek; ask for',  cat:'verb' },
+  { id:5,  latin:'cōnspiciō',  display:'cōnspiciō, cōnspicere, cōnspexī',  extra:'cōnspicere, cōnspexī',        english:'catch sight of; notice',   cat:'verb' },
+  { id:6,  latin:'audiō',      display:'audiō, audīre, audīvī',             extra:'audīre, audīvī',              english:'hear; listen to',          cat:'verb' },
+  { id:7,  latin:'possum',     display:'possum, posse, potuī',              extra:'posse, potuī',                english:'can; be able',             cat:'verb' },
+  { id:8,  latin:'terra',      display:'terra, terr- 1f',                   extra:'1st declension, feminine',    english:'ground; land; country',    cat:'noun' },
+  { id:9,  latin:'equus',      display:'equus, equ- 2m',                    extra:'2nd declension, masculine',   english:'horse',                    cat:'noun' },
+  { id:10, latin:'caelum',     display:'caelum, cael- 2n',                  extra:'2nd declension, neuter',      english:'sky; heaven',              cat:'noun' },
+  { id:11, latin:'auxilium',   display:'auxilium, auxili- 2n',              extra:'2nd declension, neuter',      english:'help',                     cat:'noun' },
+  { id:12, latin:'mōns',       display:'mōns, mont- 3m',                    extra:'3rd declension, masculine',   english:'mountain',                 cat:'noun' },
+  { id:13, latin:'mare',       display:'mare, mar- 3n',                     extra:'3rd declension, neuter',      english:'sea',                      cat:'noun' },
+  { id:14, latin:'bonus',      display:'bonus, bona, bonum',                extra:'bona, bonum',                 english:'good',                     cat:'adjective' },
+  { id:15, latin:'magnus',     display:'magnus, magna, magnum',             extra:'magna, magnum',               english:'big; large; great',        cat:'adjective' },
+  { id:16, latin:'malus',      display:'malus, mala, malum',                extra:'mala, malum',                 english:'evil; bad',                cat:'adjective' },
+  { id:17, latin:'difficilis', display:'difficilis, difficil-',              extra:'difficil-',                   english:'difficult',                cat:'adjective' },
+  { id:18, latin:'facilis',    display:'facilis, facil-',                    extra:'facil-',                      english:'easy',                     cat:'adjective' },
+  { id:19, latin:'fēlīx',      display:'fēlīx, fēlīc-',                     extra:'fēlīc-',                      english:'fortunate; happy; lucky',  cat:'adjective' },
+  { id:20, latin:'ā / ab',     display:'ā, ab + ablative',                  extra:'+ ablative',                  english:'from; away from; by',      cat:'preposition' },
+  { id:21, latin:'cum',        display:'cum + ablative',                    extra:'+ ablative',                  english:'with',                     cat:'preposition' },
+  { id:22, latin:'dē',         display:'dē + ablative',                     extra:'+ ablative',                  english:'from; down from; about',   cat:'preposition' },
+  { id:23, latin:'ē / ex',     display:'ē, ex + ablative',                  extra:'+ ablative',                  english:'from; out of; out from',   cat:'preposition' },
+  { id:24, latin:'in',         display:'in + ablative',                     extra:'+ ablative',                  english:'in; on',                   cat:'preposition' },
+  { id:25, latin:'celeriter',  display:'celeriter',                         extra:'adverb',                      english:'quickly',                  cat:'adverb' },
+  { id:26, latin:'diū',        display:'diū',                               extra:'adverb',                      english:'for a long time',          cat:'adverb' },
+  { id:27, latin:'ōlim',       display:'ōlim',                              extra:'adverb',                      english:'once; some time ago',      cat:'adverb' },
+  { id:28, latin:'subitō',     display:'subitō',                            extra:'adverb',                      english:'suddenly',                 cat:'adverb' },
+  { id:29, latin:'tandem',     display:'tandem',                            extra:'adverb',                      english:'at last; finally',         cat:'adverb' },
+];
+
+/* --- PHRASES --- */
+const PHRASES = [
+  /* Latin → English */
+  { id:0, type:'lte',
+    prompt:'equus magnus est',
+    answer:'The horse is big',
+    opts:['The horse is big','The mountain is large','The sea is great','The horse is bad'] },
+  { id:1, type:'lte',
+    prompt:'puella auxilium petit',
+    answer:'The girl seeks help',
+    opts:['The girl seeks help','The boy seeks help','The girl fights for help','The girl climbs the mountain'] },
+  { id:2, type:'lte',
+    prompt:'mīlitēs celeriter pugnant',
+    answer:'The soldiers fight quickly',
+    opts:['The soldiers fight quickly','The soldiers climb quickly','The sailors fight quickly','The soldiers go down slowly'] },
+  { id:3, type:'lte',
+    prompt:'subitō nauta dēscendit',
+    answer:'Suddenly the sailor goes down',
+    opts:['Suddenly the sailor goes down','At last the sailor climbs','Suddenly the sailor fights','Suddenly the horse goes down'] },
+  { id:4, type:'lte',
+    prompt:'tandem puer montem ascendit',
+    answer:'At last the boy climbs the mountain',
+    opts:['At last the boy climbs the mountain','Suddenly the boy goes down the mountain','At last the girl climbs the mountain','Once the boy climbed the sea'] },
+  { id:5, type:'lte',
+    prompt:'diū in marī manēbant',
+    answer:'For a long time they remained at sea',
+    opts:['For a long time they remained at sea','They quickly returned from the sea','They fought on the sea for a long time','For a long time they sailed on the land'] },
+  { id:6, type:'lte',
+    prompt:'ōlim in terrā habitābant',
+    answer:'Once they lived on the land',
+    opts:['Once they lived on the land','Suddenly they left the land','At last they returned to the land','For a long time they lived at sea'] },
+  { id:7, type:'lte',
+    prompt:'possumus mare cōnspicere',
+    answer:'We can catch sight of the sea',
+    opts:['We can catch sight of the sea','We can hear the mountain','We can climb onto the sea','They can see the mountain'] },
+  { id:8, type:'lte',
+    prompt:'dē monte dēscendimus',
+    answer:'We go down from the mountain',
+    opts:['We go down from the mountain','We climb up the mountain','We go down into the sea','We go down from the sky'] },
+  { id:9, type:'lte',
+    prompt:'iussit mīlitēs pugnāre',
+    answer:'He ordered the soldiers to fight',
+    opts:['He ordered the soldiers to fight','He heard the soldiers fighting','She ordered the soldiers to climb','He ordered the soldiers to go down'] },
+  { id:10, type:'lte',
+    prompt:'difficile est montem ascendere',
+    answer:'It is difficult to climb the mountain',
+    opts:['It is difficult to climb the mountain','It is easy to climb the mountain','It is difficult to go down the mountain','It is difficult to find the sea'] },
+  { id:11, type:'lte',
+    prompt:'fēlīx miles auxilium audit',
+    answer:'The lucky soldier hears the call for help',
+    opts:['The lucky soldier hears the call for help','The bad soldier seeks help','The lucky soldier cannot hear','The fortunate soldier orders help'] },
+  /* English → Latin */
+  { id:12, type:'etl',
+    prompt:'with the soldiers',
+    answer:'cum mīlitibus',
+    opts:['cum mīlitibus','in mīlitibus','dē mīlitibus','ē mīlitibus'],
+    optsLat: true },
+  { id:13, type:'etl',
+    prompt:'out of the sea',
+    answer:'ē marī',
+    opts:['ē marī','in marī','dē marī','cum marī'],
+    optsLat: true },
+  { id:14, type:'etl',
+    prompt:'The land is large',
+    answer:'terra magna est',
+    opts:['terra magna est','terra malus est','terra magnus est','mare magnum est'],
+    optsLat: true },
+  { id:15, type:'etl',
+    prompt:'on the ground',
+    answer:'in terrā',
+    opts:['in terrā','dē terrā','ē terrā','cum terrā'],
+    optsLat: true },
+  { id:16, type:'etl',
+    prompt:'Help is easy',
+    answer:'auxilium facile est',
+    opts:['auxilium facile est','auxilium difficile est','auxilium fēlīx est','auxilium magnum est'],
+    optsLat: true },
+  { id:17, type:'etl',
+    prompt:'Suddenly the horse climbs',
+    answer:'subitō equus ascendit',
+    opts:['subitō equus ascendit','tandem equus ascendit','subitō equus dēscendit','ōlim equus ascendit'],
+    optsLat: true },
+  { id:18, type:'etl',
+    prompt:'from the mountain',
+    answer:'dē monte',
+    opts:['dē monte','in monte','ē monte','cum monte'],
+    optsLat: true },
+  { id:19, type:'etl',
+    prompt:'He can hear the horse',
+    answer:'equum audīre potest',
+    opts:['equum audīre potest','equum cōnspicere potest','equum ascendere potest','equum petere potest'],
+    optsLat: true },
+  { id:20, type:'etl',
+    prompt:'The soldiers are lucky',
+    answer:'mīlitēs fēlīcēs sunt',
+    opts:['mīlitēs fēlīcēs sunt','mīlitēs bonī sunt','mīlitēs malī sunt','nautae fēlīcēs sunt'],
+    optsLat: true },
+];
+
+/* --- CIVILISATION QUESTIONS --- */
+const CIV = [
+  /* GODS */
+  { id:0,  cat:'gods', q:'Who was the king of the Roman gods?',
+    opts:['Jupiter','Mars','Neptune','Pluto'], answer:'Jupiter',
+    fact:'Jupiter ruled the sky and thunder. His Greek equivalent was Zeus.' },
+  { id:1,  cat:'gods', q:'Which god ruled the sea?',
+    opts:['Neptune','Jupiter','Mars','Vulcan'], answer:'Neptune',
+    fact:'Neptune\'s Greek equivalent was Poseidon. He was also god of earthquakes.' },
+  { id:2,  cat:'gods', q:'Who was the goddess of love and beauty?',
+    opts:['Venus','Juno','Minerva','Diana'], answer:'Venus',
+    fact:'Venus was also goddess of desire. Her Greek equivalent was Aphrodite.' },
+  { id:3,  cat:'gods', q:'Which god acted as the messenger of the gods?',
+    opts:['Mercury','Apollo','Mars','Bacchus'], answer:'Mercury',
+    fact:'Mercury was also the god of trade and travellers. Greek: Hermes.' },
+  { id:4,  cat:'gods', q:'Who was the goddess of wisdom and crafts?',
+    opts:['Minerva','Juno','Venus','Diana'], answer:'Minerva',
+    fact:'Minerva was also goddess of strategic warfare. Greek: Athena.' },
+  { id:5,  cat:'gods', q:'Which god was associated with war?',
+    opts:['Mars','Vulcan','Jupiter','Pluto'], answer:'Mars',
+    fact:'Mars was particularly important in Rome — the month of March is named after him. Greek: Ares.' },
+  { id:6,  cat:'gods', q:'Who was the goddess of hunting and the moon?',
+    opts:['Diana','Juno','Minerva','Venus'], answer:'Diana',
+    fact:'Diana was also seen as a protector of women in childbirth. Greek: Artemis.' },
+  { id:7,  cat:'gods', q:'Which god ruled the underworld?',
+    opts:['Pluto','Mars','Neptune','Saturn'], answer:'Pluto',
+    fact:'Pluto\'s realm was called the Underworld or Dis. Greek: Hades.' },
+  { id:8,  cat:'gods', q:'Who was the god of fire and metalworking?',
+    opts:['Vulcan','Mars','Mercury','Apollo'], answer:'Vulcan',
+    fact:'Vulcan was said to forge weapons for the gods in his underground forge. Greek: Hephaestus.' },
+  { id:9,  cat:'gods', q:'Who was the queen of the gods and goddess of marriage?',
+    opts:['Juno','Venus','Diana','Minerva'], answer:'Juno',
+    fact:'Juno was Jupiter\'s wife. The month of June is named after her. Greek: Hera.' },
+  { id:10, cat:'gods', q:'Which god was associated with the sun, music, and poetry?',
+    opts:['Apollo','Mercury','Bacchus','Vulcan'], answer:'Apollo',
+    fact:'Apollo kept the same name in both Roman and Greek religion. He was also god of prophecy.' },
+  { id:11, cat:'gods', q:'Who was the god of wine and celebration?',
+    opts:['Bacchus','Apollo','Saturn','Mercury'], answer:'Bacchus',
+    fact:'Festivals in Bacchus\'s honour were called Bacchanalia. Greek: Dionysus.' },
+  /* HOUSE */
+  { id:12, cat:'house', q:'What is the Latin word for a wealthy Roman\'s townhouse?',
+    opts:['domus','insula','villa','atrium'], answer:'domus',
+    fact:'The domus was typically built around a central atrium and was a sign of wealth and status.' },
+  { id:13, cat:'house', q:'What was an insula?',
+    opts:['An apartment block for poorer Romans','A Roman temple','A type of bath house','A Roman road'], answer:'An apartment block for poorer Romans',
+    fact:'Insulae could be several storeys tall. Ground floor flats were most expensive; upper floors were cheaper but more dangerous (fire risk).' },
+  { id:14, cat:'house', q:'What was the atrium in a Roman house?',
+    opts:['The central hall, open to the sky','The dining room','The kitchen','The garden'], answer:'The central hall, open to the sky',
+    fact:'The atrium was the heart of the domus. Visitors were received here. The opening in the roof was called the compluvium.' },
+  { id:15, cat:'house', q:'What was the impluvium?',
+    opts:['A pool in the atrium to collect rainwater','A type of Roman oven','A garden with columns','A storage room'], answer:'A pool in the atrium to collect rainwater',
+    fact:'Rainwater fell through the compluvium (roof opening) into the impluvium below. This was the household water supply.' },
+  { id:16, cat:'house', q:'What was the triclinium?',
+    opts:['The dining room','The master\'s study','The entrance hall','The kitchen'], answer:'The dining room',
+    fact:'Romans typically ate lying on couches arranged around three sides of a low table — hence tri (three) + klinos (couch).' },
+  { id:17, cat:'house', q:'What was the peristylum?',
+    opts:['A garden surrounded by columns','The main entrance hall','The room for guests','A storage cellar'], answer:'A garden surrounded by columns',
+    fact:'Wealthier domus had a peristylum at the back — a colonnaded garden where the family could relax.' },
+  { id:18, cat:'house', q:'What was a lararium?',
+    opts:['A household shrine to the family gods','A type of oil lamp','A store cupboard','An underfloor heating system'], answer:'A household shrine to the family gods',
+    fact:'The lares were protective spirits of the household. Families made daily offerings at the lararium.' },
+  { id:19, cat:'house', q:'What was the tablinum?',
+    opts:['The master\'s study or office','The slave quarters','The bathroom','The entrance hall'], answer:'The master\'s study or office',
+    fact:'The tablinum was where the paterfamilias (male head of household) conducted business and received clients.' },
+  { id:20, cat:'house', q:'What was the opening in the roof of the atrium called?',
+    opts:['compluvium','impluvium','peristylum','tablinum'], answer:'compluvium',
+    fact:'Compluvium comes from compluo — to let rain flow together. The pool below (impluvium) collected the water.' },
+  { id:21, cat:'house', q:'What was the fauces in a Roman house?',
+    opts:['The narrow entrance corridor','The back garden','The kitchen area','The master bedroom'], answer:'The narrow entrance corridor',
+    fact:'The fauces (meaning "throat") was the passageway leading from the front door into the atrium.' },
+  /* FORUM & BATHS */
+  { id:22, cat:'forum', q:'What was the Forum Romanum?',
+    opts:['The centre of Roman public and political life','A type of Roman theatre','A gladiatorial arena','A large temple complex'], answer:'The centre of Roman public and political life',
+    fact:'The Forum was where elections, trials, public speeches, and religious ceremonies all took place.' },
+  { id:23, cat:'forum', q:'What were the rostra?',
+    opts:['A platform for making public speeches','The steps of the Capitol','The seats in a Roman theatre','The city gates'], answer:'A platform for making public speeches',
+    fact:'The rostra was decorated with the bronze rams (rostra) of captured enemy ships. Famous orators like Cicero spoke here.' },
+  { id:24, cat:'forum', q:'What was a basilica used for in Rome?',
+    opts:['Law courts and business','Religious worship','Gladiatorial games','Bathing'], answer:'Law courts and business',
+    fact:'Basilicae were large roofed halls. Later, early Christians adapted the design for their churches.' },
+  { id:25, cat:'forum', q:'What does SPQR stand for?',
+    opts:['Senatus Populusque Romanus','Senatus Populus Qui Rex','Senatus Potestas Que Regnum','Summus Populus Qui Romam'], answer:'Senatus Populusque Romanus',
+    fact:'SPQR means "The Senate and People of Rome". It appeared on Roman standards, buildings, and official documents.' },
+  { id:26, cat:'forum', q:'What was the Via Sacra?',
+    opts:['The Sacred Way running through the Forum','A Roman road to the north','The road into Rome from the coast','A street lined with temples only'], answer:'The Sacred Way running through the Forum',
+    fact:'The Via Sacra was Rome\'s most famous street. Victorious generals led their triumphal processions along it.' },
+  { id:27, cat:'forum', q:'What was the caldarium in the Roman baths?',
+    opts:['The hot room','The cold room','The changing room','The warm room'], answer:'The hot room',
+    fact:'The caldarium was the hottest room, heated by the hypocaust system. Bathers would sweat here before the next stage.' },
+  { id:28, cat:'forum', q:'What was the frigidarium?',
+    opts:['The cold room with a cold plunge pool','The hot steam room','The exercise yard','The changing room'], answer:'The cold room with a cold plunge pool',
+    fact:'After the hot rooms, Romans plunged into the frigidarium pool. The shock helped close the pores.' },
+  { id:29, cat:'forum', q:'What was a hypocaust?',
+    opts:['An underfloor heating system','A type of Roman bath soap','The changing room in baths','A cold water pool'], answer:'An underfloor heating system',
+    fact:'The hypocaust worked by circulating hot air under raised floors and through hollow walls. A brilliant feat of engineering.' },
+  { id:30, cat:'forum', q:'What was the tepidarium?',
+    opts:['The warm intermediate room in the baths','The hottest room','The outdoor exercise area','The cold plunge pool'], answer:'The warm intermediate room in the baths',
+    fact:'The tepidarium was used to gradually cool down after the caldarium, before the frigidarium.' },
+  /* GENERAL */
+  { id:31, cat:'general', q:'What was a toga?',
+    opts:['The formal outer garment of a Roman male citizen','A type of Roman sandal','A Roman military cloak','A woman\'s dress'], answer:'The formal outer garment of a Roman male citizen',
+    fact:'Only Roman citizens could wear the toga. It was made of a single large piece of wool and was difficult to put on without help.' },
+  { id:32, cat:'general', q:'What was garum?',
+    opts:['A fermented fish sauce used in Roman cooking','A type of Roman bread','A Roman wine','A sweet Roman dessert'], answer:'A fermented fish sauce used in Roman cooking',
+    fact:'Garum was made from fermented fish guts and was used like salt or soy sauce. Romans added it to almost everything.' },
+  { id:33, cat:'general', q:'What was the Colosseum used for?',
+    opts:['Gladiatorial games and public spectacles','Religious ceremonies','Senate meetings','Chariot racing'], answer:'Gladiatorial games and public spectacles',
+    fact:'The Colosseum could hold up to 50,000 spectators. It also hosted animal hunts (venationes) and public executions.' },
+  { id:34, cat:'general', q:'What was the Circus Maximus used for?',
+    opts:['Chariot racing','Gladiatorial fights','Public speeches','Military parades'], answer:'Chariot racing',
+    fact:'The Circus Maximus could hold around 250,000 spectators, making it the largest entertainment venue in the ancient world.' },
+  { id:35, cat:'general', q:'According to Roman tradition, in what year was Rome founded?',
+    opts:['753 BC','509 BC','44 BC','27 BC'], answer:'753 BC',
+    fact:'According to legend, Rome was founded by Romulus in 753 BC. The city was said to be built on seven hills.' },
+  { id:36, cat:'general', q:'What were lares?',
+    opts:['Household gods who protected the family','Roman household slaves','Types of Roman lamp','Ancestral wax portraits'], answer:'Household gods who protected the family',
+    fact:'Every Roman home had a lararium shrine. Romans believed the lares would protect the household if properly honoured.' },
+  { id:37, cat:'general', q:'What was a stola?',
+    opts:['A long dress worn by Roman women','A type of Roman sandal','A military tunic','A man\'s formal garment'], answer:'A long dress worn by Roman women',
+    fact:'The stola was worn over a tunica. Only Roman citizen women could wear it — it was a mark of respectability.' },
+  { id:38, cat:'general', q:'What does the Latin phrase "carpe diem" mean?',
+    opts:['Seize the day','Beware the dog','The die is cast','I came, I saw, I conquered'], answer:'Seize the day',
+    fact:'Carpe diem comes from the poet Horace. It encourages enjoying the present moment rather than worrying about the future.' },
+  { id:39, cat:'general', q:'What was a paterfamilias?',
+    opts:['The male head of a Roman household, with legal power over all in it','A Roman priest','A type of Roman festival','The eldest son in a family'], answer:'The male head of a Roman household, with legal power over all in it',
+    fact:'The paterfamilias had extraordinary legal power (patria potestas) over his family, including the right of life and death.' },
+  { id:40, cat:'general', q:'What were the Ides of March?',
+    opts:['The 15th of March — the date Julius Caesar was assassinated','A Roman festival of spring','The first day of the Roman calendar','A religious festival for Mars'], answer:'The 15th of March — the date Julius Caesar was assassinated',
+    fact:'Julius Caesar was stabbed 23 times in the Theatre of Pompey on 15 March 44 BC. His friend Brutus was among the conspirators.' },
+];
+
+/* ========================================================
+   GLOBAL STATE
+   ======================================================== */
+let mastered = new Set(JSON.parse(localStorage.getItem('lat_mastered') || '[]'));
+let currentFilter = 'all';
+let filtered = [...VOCAB];
+let cardIdx = 0;
+let flipped = false;
+
+// vocab quiz
+let vqDir = 'lte', vqWords = [], vqIdx = 0, vqCorrect = 0, vqAnswered = false;
+
+// phrases quiz
+let phFilter = 'all', phWords = [], phIdx = 0, phCorrect = 0, phAnswered = false;
+
+// civ quiz
+let civFilter = 'all', civWords = [], civIdx = 0, civCorrect = 0, civAnswered = false;
+
+/* ========================================================
+   UTILITIES
+   ======================================================== */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function endMsg(correct, total) {
+  const p = Math.round(correct / total * 100);
+  if (p === 100) return 'Perfect score! Excellent work.';
+  if (p >= 80)  return 'Great result. Keep it up!';
+  if (p >= 60)  return 'Good progress. A bit more practice will help.';
+  return 'Keep practising — you will get there!';
+}
+function save() {
+  localStorage.setItem('lat_mastered', JSON.stringify([...mastered]));
+  document.getElementById('headerPill').textContent = `${mastered.size} / 30 mastered`;
+}
+
+/* ========================================================
+   VIEWS
+   ======================================================== */
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'flashcards')  renderCard();
+  if (name === 'vocab-quiz')  startVq();
+  if (name === 'phrases')     startPh();
+  if (name === 'civ')         startCiv();
+  if (name === 'progress')    renderProgress();
+}
+
+/* ========================================================
+   FLASHCARDS
+   ======================================================== */
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('#view-flashcards .filt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter(); cardIdx = 0; renderCard();
+}
+function applyFilter() {
+  if (currentFilter === 'all')      filtered = [...VOCAB];
+  else if (currentFilter === 'mastered') filtered = VOCAB.filter(w => mastered.has(w.id));
+  else                              filtered = VOCAB.filter(w => !mastered.has(w.id));
+}
+function shuffleCards() {
+  for (let i = filtered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+  }
+  cardIdx = 0; renderCard();
+}
+function renderCard() {
+  const deck = document.getElementById('fcDeck');
+  const noCards = document.getElementById('noCards');
+  if (!filtered.length) {
+    noCards.style.display = 'block'; deck.style.display = 'none';
+    document.getElementById('fcCounter').textContent = 'No cards'; return;
+  }
+  noCards.style.display = 'none'; deck.style.display = 'block';
+  const w = filtered[cardIdx];
+  const m = mastered.has(w.id);
+  document.getElementById('fcCounter').textContent  = `Card ${cardIdx + 1} of ${filtered.length}`;
+  document.getElementById('fcLatin').textContent    = w.latin;
+  document.getElementById('fcExtra').textContent    = w.extra;
+  document.getElementById('fcEnglish').textContent  = w.english;
+  document.getElementById('fcFull').textContent     = w.display;
+  document.getElementById('badgeFront').textContent = w.cat;
+  document.getElementById('badgeBack').textContent  = w.cat;
+  const mc = m ? 'mastery-dot mastered' : 'mastery-dot';
+  document.getElementById('dotFront').className = mc;
+  document.getElementById('dotBack').className  = mc;
+  const pct = filtered.length > 1 ? cardIdx / (filtered.length - 1) * 100 : 100;
+  document.getElementById('fcBar').style.width = Math.max(2, pct) + '%';
+  document.getElementById('prevBtn').disabled = cardIdx === 0;
+  document.getElementById('nextBtn').disabled = cardIdx === filtered.length - 1;
+  flipped = false;
+  document.getElementById('flipCard').classList.remove('flipped');
+}
+function flipCard()  { flipped = !flipped; document.getElementById('flipCard').classList.toggle('flipped', flipped); }
+function prevCard()  { if (cardIdx > 0)                     { cardIdx--; renderCard(); } }
+function nextCard()  { if (cardIdx < filtered.length - 1)   { cardIdx++; renderCard(); } }
+function markCard(asMastered) {
+  const w = filtered[cardIdx];
+  if (asMastered) mastered.add(w.id); else mastered.delete(w.id);
+  save();
+  if (cardIdx < filtered.length - 1) cardIdx++;
+  applyFilter();
+  if (cardIdx >= filtered.length) cardIdx = Math.max(0, filtered.length - 1);
+  renderCard();
+}
+
+/* ========================================================
+   VOCAB QUIZ
+   ======================================================== */
+function setVqDir(dir, btn) {
+  vqDir = dir;
+  document.querySelectorAll('#view-vocab-quiz .filt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startVq();
+}
+function startVq() {
+  vqWords = shuffle([...VOCAB]); vqIdx = 0; vqCorrect = 0; vqAnswered = false;
+  document.getElementById('vqMain').style.display = 'block';
+  document.getElementById('vqEnd').classList.remove('show');
+  document.getElementById('vqScore').textContent = '0';
+  document.getElementById('vqTotal').textContent = '0';
+  resetFeedback('vqFeedback', 'vqNextBtn');
+  renderVq();
+}
+function renderVq() {
+  if (vqIdx >= vqWords.length) { showVqEnd(); return; }
+  vqAnswered = false;
+  const w = vqWords[vqIdx];
+  document.getElementById('vqBar').style.width = (vqIdx / vqWords.length * 100) + '%';
+  resetFeedback('vqFeedback', 'vqNextBtn');
+  if (vqDir === 'lte') {
+    document.getElementById('vqLabel').textContent = 'What does this mean in English?';
+    const el = document.getElementById('vqWord'); el.textContent = w.latin; el.className = 'q-word';
+    document.getElementById('vqSub').textContent = w.extra;
+  } else {
+    document.getElementById('vqLabel').textContent = 'Which Latin word means this?';
+    const el = document.getElementById('vqWord'); el.textContent = w.english; el.className = 'q-word eng';
+    document.getElementById('vqSub').textContent = '';
+  }
+  const distractors = shuffle(VOCAB.filter(v => v.id !== w.id)).slice(0, 3);
+  buildOpts('vqOpts', shuffle([w, ...distractors]), opt => {
+    const txt = vqDir === 'lte' ? opt.english : opt.latin;
+    return { text: txt, correct: opt.id === w.id, isLat: vqDir !== 'lte' };
+  }, w, 'vqFeedback', 'vqNextBtn', () => {
+    vqCorrect++;
+    vqIdx++;
+    document.getElementById('vqScore').textContent = vqCorrect;
+    document.getElementById('vqTotal').textContent = vqIdx;
+  }, () => {
+    vqIdx++;
+    document.getElementById('vqScore').textContent = vqCorrect;
+    document.getElementById('vqTotal').textContent = vqIdx;
+  }, vqDir === 'lte' ? w.english : w.latin);
+}
+function vqNext() { renderVq(); }
+function showVqEnd() {
+  document.getElementById('vqMain').style.display = 'none';
+  document.getElementById('vqEnd').classList.add('show');
+  document.getElementById('vqEndScore').textContent = `${vqCorrect}/${VOCAB.length}`;
+  document.getElementById('vqEndMsg').textContent = endMsg(vqCorrect, VOCAB.length);
+}
+
+/* ========================================================
+   SHARED OPTION BUILDER
+   ======================================================== */
+function buildOpts(containerId, options, mapFn, correctItem, feedbackId, nextBtnId, onCorrect, onWrong, correctText) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  options.forEach(opt => {
+    const { text, correct, isLat } = mapFn(opt);
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn' + (isLat ? ' lat-opt' : '');
+    btn.textContent = text;
+    btn.onclick = () => {
+      if (document.getElementById(feedbackId).dataset.answered === '1') return;
+      document.getElementById(feedbackId).dataset.answered = '1';
+      container.querySelectorAll('.opt-btn').forEach(b => {
+        b.disabled = true;
+        if (b.textContent === correctText) b.classList.add('correct');
+      });
+      const fb = document.getElementById(feedbackId);
+      if (correct) {
+        btn.classList.add('correct');
+        fb.textContent = '✓ Correct!'; fb.className = 'feedback-line ok';
+        onCorrect();
+      } else {
+        btn.classList.add('wrong');
+        fb.textContent = `✗  The answer was: ${correctText}`; fb.className = 'feedback-line bad';
+        onWrong();
+      }
+      document.getElementById(nextBtnId).classList.add('show');
+    };
+    container.appendChild(btn);
+  });
+  document.getElementById(feedbackId).dataset.answered = '0';
+}
+function resetFeedback(feedbackId, nextBtnId) {
+  const fb = document.getElementById(feedbackId);
+  fb.textContent = ''; fb.className = 'feedback-line'; fb.dataset.answered = '0';
+  document.getElementById(nextBtnId).classList.remove('show');
+}
+
+/* ========================================================
+   PHRASES QUIZ
+   ======================================================== */
+function setPhFilter(f, btn) {
+  phFilter = f;
+  document.querySelectorAll('#view-phrases .filt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startPh();
+}
+function startPh() {
+  let pool = phFilter === 'all' ? [...PHRASES] : PHRASES.filter(p => p.type === phFilter);
+  phWords = shuffle(pool); phIdx = 0; phCorrect = 0; phAnswered = false;
+  document.getElementById('phMain').style.display = 'block';
+  document.getElementById('phEnd').classList.remove('show');
+  document.getElementById('phScore').textContent = '0';
+  document.getElementById('phTotal').textContent = '0';
+  resetFeedback('phFeedback', 'phNextBtn');
+  renderPh();
+}
+function renderPh() {
+  if (phIdx >= phWords.length) { showPhEnd(); return; }
+  phAnswered = false;
+  const p = phWords[phIdx];
+  document.getElementById('phBar').style.width = (phIdx / phWords.length * 100) + '%';
+  resetFeedback('phFeedback', 'phNextBtn');
+
+  const wordEl = document.getElementById('phWord');
+  const badgeEl = document.getElementById('phBadge');
+  const labelEl = document.getElementById('phLabel');
+
+  if (p.type === 'lte') {
+    labelEl.textContent = 'Translate this into English:';
+    wordEl.textContent = p.prompt; wordEl.className = 'q-word phrase-lat';
+    badgeEl.innerHTML = '<span class="q-badge lte">Latin → English</span>';
+  } else {
+    labelEl.textContent = 'Choose the correct Latin translation:';
+    wordEl.textContent = p.prompt; wordEl.className = 'q-word eng';
+    badgeEl.innerHTML = '<span class="q-badge etl">English → Latin</span>';
+  }
+
+  const opts = shuffle([...p.opts]);
+  buildOpts('phOpts', opts, opt => ({
+    text: opt, correct: opt === p.answer, isLat: p.type === 'etl'
+  }), p, 'phFeedback', 'phNextBtn', () => {
+    phCorrect++;
+    phIdx++;
+    document.getElementById('phScore').textContent = phCorrect;
+    document.getElementById('phTotal').textContent = phIdx;
+  }, () => {
+    phIdx++;
+    document.getElementById('phScore').textContent = phCorrect;
+    document.getElementById('phTotal').textContent = phIdx;
+  }, p.answer);
+}
+function phNext() { renderPh(); }
+function showPhEnd() {
+  document.getElementById('phMain').style.display = 'none';
+  document.getElementById('phEnd').classList.add('show');
+  document.getElementById('phEndScore').textContent = `${phCorrect}/${phWords.length}`;
+  document.getElementById('phEndMsg').textContent = endMsg(phCorrect, phWords.length);
+}
+
+/* ========================================================
+   CIVILISATION QUIZ
+   ======================================================== */
+function setCivFilter(f, btn) {
+  civFilter = f;
+  document.querySelectorAll('#view-civ .filt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startCiv();
+}
+function startCiv() {
+  let pool = civFilter === 'all' ? [...CIV] : CIV.filter(q => q.cat === civFilter);
+  civWords = shuffle(pool); civIdx = 0; civCorrect = 0; civAnswered = false;
+  document.getElementById('civMain').style.display = 'block';
+  document.getElementById('civEnd').classList.remove('show');
+  document.getElementById('civScore').textContent = '0';
+  document.getElementById('civTotal').textContent = '0';
+  resetFeedback('civFeedback', 'civNextBtn');
+  renderCiv();
+}
+function renderCiv() {
+  if (civIdx >= civWords.length) { showCivEnd(); return; }
+  civAnswered = false;
+  const q = civWords[civIdx];
+  document.getElementById('civBar').style.width = (civIdx / civWords.length * 100) + '%';
+  resetFeedback('civFeedback', 'civNextBtn');
+
+  document.getElementById('civWord').textContent = q.q;
+  const catLabels = { gods:'Gods', house:'Houses', forum:'Forum & Baths', general:'General' };
+  const catClass  = { gods:'cat-gods', house:'cat-house', forum:'cat-forum', general:'cat-general' };
+  document.getElementById('civBadge').innerHTML =
+    `<span class="q-badge ${catClass[q.cat]}">${catLabels[q.cat]}</span>`;
+  document.getElementById('civLabel').textContent = 'Roman civilisation';
+
+  const opts = shuffle([...q.opts]);
+  buildOpts('civOpts', opts, opt => ({
+    text: opt, correct: opt === q.answer, isLat: false
+  }), q, 'civFeedback', 'civNextBtn', () => {
+    civCorrect++;
+    civIdx++;
+    document.getElementById('civScore').textContent = civCorrect;
+    document.getElementById('civTotal').textContent = civIdx;
+    // show fact after correct
+    const fb = document.getElementById('civFeedback');
+    fb.textContent = `✓ Correct!  ${q.fact}`;
+    fb.className = 'feedback-line ok';
+    fb.style.maxWidth = '100%';
+  }, () => {
+    civIdx++;
+    document.getElementById('civScore').textContent = civCorrect;
+    document.getElementById('civTotal').textContent = civIdx;
+    const fb = document.getElementById('civFeedback');
+    fb.textContent = `✗  ${q.answer}. ${q.fact}`;
+    fb.className = 'feedback-line bad';
+  }, q.answer);
+}
+function civNext() { renderCiv(); }
+function showCivEnd() {
+  document.getElementById('civMain').style.display = 'none';
+  document.getElementById('civEnd').classList.add('show');
+  document.getElementById('civEndScore').textContent = `${civCorrect}/${civWords.length}`;
+  document.getElementById('civEndMsg').textContent = endMsg(civCorrect, civWords.length);
+}
+
+/* ========================================================
+   PROGRESS
+   ======================================================== */
+function renderProgress() {
+  const m = mastered.size, l = VOCAB.length - m;
+  const pct = Math.round(m / VOCAB.length * 100);
+  document.getElementById('pMastered').textContent = m;
+  document.getElementById('pLearning').textContent = l;
+  document.getElementById('pBar').style.width = pct + '%';
+  document.getElementById('pPct').textContent = pct + '% complete';
+  const mWords = VOCAB.filter(w => mastered.has(w.id));
+  const lWords = VOCAB.filter(w => !mastered.has(w.id));
+  const mGrid = document.getElementById('masteredGrid');
+  const lGrid = document.getElementById('learningGrid');
+  mGrid.innerHTML = mWords.length === 0
+    ? '<p style="color:var(--text-muted);font-size:13px;grid-column:1/-1">Nothing mastered yet — start with the flashcards!</p>'
+    : mWords.map(w => `<div class="word-row"><div class="w-dot mastered"></div><div class="w-latin">${w.latin}</div><div class="w-eng">${w.english}</div></div>`).join('');
+  lGrid.innerHTML = lWords.map(w => `<div class="word-row"><div class="w-dot"></div><div class="w-latin">${w.latin}</div><div class="w-eng">${w.english}</div></div>`).join('');
+}
+function resetAll() {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    mastered.clear(); save(); renderProgress();
+  }
+}
+
+/* ========================================================
+   INIT
+   ======================================================== */
+document.getElementById('headerPill').textContent = `${mastered.size} / 30 mastered`;
+applyFilter();
+renderCard();
+startVq();
+startPh();
+startCiv();
+</script>
+</body>
+</html>
