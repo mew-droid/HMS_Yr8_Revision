@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 8 Science Revision ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0b18;--card:rgba(255,255,255,0.055);--cb:rgba(255,255,255,0.1);
+  --pink:#ff79c6;--lav:#bd93f9;--gold:#ffd166;--teal:#8be9fd;--grn:#50fa7b;
+  --red:#ff5555;--txt:#f0eeff;--mu:rgba(240,238,255,0.5);--r:14px;--rs:10px;
+  --bio:#50fa7b;--chem:#ffd166;--phys:#8be9fd;
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-220px;left:-220px;width:650px;height:650px;background:radial-gradient(circle,rgba(189,147,249,0.08) 0%,transparent 65%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;bottom:-220px;right:-160px;width:580px;height:580px;background:radial-gradient(circle,rgba(255,121,198,0.07) 0%,transparent 65%);pointer-events:none;z-index:0}
+#app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 16px 60px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{0%{transform:scale(0.3)}65%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes sparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}}
+.fu{animation:fadeUp 0.38s ease both}
+/* HOME */
+.h-crown{font-size:38px;display:block;text-align:center;margin-bottom:10px}
+.h-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;background:linear-gradient(135deg,var(--pink) 20%,var(--lav) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:8px;line-height:1.2}
+.h-sub{font-size:13px;color:var(--mu);text-align:center;line-height:1.6;margin-bottom:24px}
+/* MASTER PROGRESS */
+.mp{margin-bottom:28px;background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:16px}
+.mp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.mp-label{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--lav)}
+.mp-pct{font-size:20px;font-weight:600;color:var(--txt)}
+.prog-track{height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1)}
+.prog-main{background:linear-gradient(90deg,var(--pink),var(--lav))}
+/* SUBJECT SECTIONS */
+.subj-hd{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--mu);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.subj-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* CHAPTER CARDS */
+.ch-card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px;margin-bottom:9px;position:relative;overflow:hidden}
+.ch-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px;transition:width 0.2s}
+.ch-card:hover{background:rgba(255,255,255,0.08);transform:translateX(3px)}
+.ch-icon{font-size:22px;flex-shrink:0}
+.ch-body{flex:1;min-width:0}
+.ch-code{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;opacity:0.55;margin-bottom:3px}
+.ch-name{font-size:14px;font-weight:500;line-height:1.3;margin-bottom:6px}
+.ch-micro-track{height:2px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden}
+.ch-micro-fill{height:100%;border-radius:99px;transition:width 0.5s}
+.ch-badge{flex-shrink:0;font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(255,255,255,0.06);color:var(--mu)}
+/* CHAPTER SCREEN */
+.ch-nav{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.back{background:none;border:none;color:var(--mu);cursor:pointer;font:14px 'Outfit',sans-serif;padding:0;transition:color 0.15s}
+.back:hover{color:var(--txt)}
+.ch-hdr{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.ch-hdr-bar{position:absolute;top:0;left:0;right:0;height:2px}
+.ch-hdr-icon{font-size:30px;margin-bottom:8px;display:block}
+.ch-hdr-code{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--mu);margin-bottom:4px}
+.ch-hdr-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px}
+.ch-hdr-sub{font-size:12px;color:var(--mu);line-height:1.55}
+/* TABS */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tab{padding:6px 14px;border-radius:99px;font:13px 'Outfit',sans-serif;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--mu);transition:all 0.18s;display:flex;align-items:center;gap:5px}
+.tab:hover:not(.active){background:rgba(255,255,255,0.07)}
+.tab.active{background:rgba(255,121,198,0.15);border-color:rgba(255,121,198,0.4);color:var(--pink);font-weight:500}
+.tab.done{background:rgba(80,250,123,0.08);border-color:rgba(80,250,123,0.3);color:var(--grn)}
+.tab-tick{font-size:10px}
+/* STUDY CARDS */
+.sc-intro{font-size:13px;color:var(--mu);line-height:1.65;margin-bottom:14px}
+.fact-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.fact-item{background:var(--card);border:1px solid var(--cb);border-radius:var(--rs);padding:13px 15px;cursor:pointer;transition:all 0.18s}
+.fact-item:hover{background:rgba(255,255,255,0.07)}
+.fact-item.open{background:rgba(189,147,249,0.08);border-color:rgba(189,147,249,0.25)}
+.fi-term{font-size:14px;font-weight:500;margin-bottom:0}
+.fi-def{font-size:13px;color:var(--mu);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);display:none}
+.fact-item.open .fi-def{display:block}
+.fi-hint{font-size:11px;color:rgba(240,238,255,0.3);margin-top:4px}
+/* GUIDE BLOCKS */
+.guide-block{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.gb-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.gb-icon{font-size:22px}
+.gb-title{font-size:13px;font-weight:600}
+.gb-body{font-size:13px;color:var(--mu);line-height:1.75}
+.gb-body strong{color:var(--txt);font-weight:500}
+.gb-steps{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.gb-step{display:flex;gap:10px;font-size:13px;color:var(--mu);line-height:1.5}
+.gb-sn{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(255,121,198,0.15);color:var(--pink);font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:1px}
+/* TOP GRADE TIPS */
+.tgt{background:rgba(255,209,102,0.07);border:1px solid rgba(255,209,102,0.2);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.tgt-head{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.tg-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,209,102,0.1);font-size:13px;color:var(--mu);line-height:1.5}
+.tg-item:last-child{border-bottom:none}
+.tg-star{color:var(--gold);flex-shrink:0;font-size:12px}
+/* MATCHING */
+.match-status{text-align:center;font-size:13px;color:var(--mu);margin-bottom:14px;min-height:20px}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.match-col{display:flex;flex-direction:column;gap:7px}
+.mi{background:var(--card);border:1px solid var(--cb);border-radius:var(--rs);padding:11px 13px;cursor:pointer;font-size:12px;color:var(--mu);line-height:1.4;transition:all 0.18s;min-height:44px;display:flex;align-items:center}
+.mi:hover:not(.matched):not(.locked){background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.18)}
+.mi.selected{background:rgba(255,121,198,0.12);border-color:var(--pink);color:var(--txt)}
+.mi.matched{background:rgba(80,250,123,0.1);border-color:rgba(80,250,123,0.3);color:rgba(80,250,123,0.85);cursor:default}
+.mi.wrong{animation:shake 0.4s ease;background:rgba(255,85,85,0.1);border-color:rgba(255,85,85,0.35)}
+.mi.locked{cursor:default;opacity:0.5}
+.match-complete{text-align:center;padding:20px;background:rgba(80,250,123,0.07);border:1px solid rgba(80,250,123,0.2);border-radius:var(--r);margin-top:12px}
+.mc-emoji{font-size:42px;display:block;margin-bottom:10px;animation:popIn 0.5s cubic-bezier(0.36,0.07,0.19,0.97)}
+/* TRUE FALSE */
+.tf-list{display:flex;flex-direction:column;gap:10px}
+.tf-card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:15px}
+.tf-stmt{font-size:14px;font-weight:500;line-height:1.5;margin-bottom:11px}
+.tf-btns{display:flex;gap:8px}
+.tf-btn{flex:1;padding:9px;border-radius:var(--rs);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);font:13px 'Outfit',sans-serif;cursor:pointer;transition:all 0.18s;color:var(--mu)}
+.tf-btn:hover:not(:disabled){border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:var(--txt)}
+.tf-btn.true-btn{color:var(--grn);border-color:rgba(80,250,123,0.25)}
+.tf-btn.false-btn{color:var(--red);border-color:rgba(255,85,85,0.25)}
+.tf-btn:disabled{opacity:0.5;cursor:default}
+.tf-reveal{margin-top:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;color:var(--mu);line-height:1.6;display:none}
+.tf-reveal.show{display:block}
+.tf-reveal.correct{background:rgba(80,250,123,0.08);border:1px solid rgba(80,250,123,0.2)}
+.tf-reveal.wrong{background:rgba(255,85,85,0.08);border:1px solid rgba(255,85,85,0.2)}
+.tf-result{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px}
+/* WORDSEARCH */
+.ws-container{overflow-x:auto;padding-bottom:4px}
+.ws-grid{display:inline-flex;flex-direction:column;gap:2px;margin:0 auto}
+.ws-row{display:flex;gap:2px}
+.ws-cell{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;cursor:pointer;border-radius:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);transition:all 0.1s;color:var(--mu);user-select:none;flex-shrink:0}
+.ws-cell:hover{background:rgba(255,121,198,0.12);color:var(--pink)}
+.ws-cell.start{background:rgba(255,121,198,0.2);color:var(--pink);border-color:rgba(255,121,198,0.5)}
+.ws-cell.found{background:rgba(80,250,123,0.15);color:var(--grn);border-color:rgba(80,250,123,0.3)}
+.ws-cell.found.start{background:rgba(80,250,123,0.15);color:var(--grn)}
+.ws-words{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;justify-content:center}
+.ws-word{padding:4px 10px;border-radius:99px;font-size:11px;font-weight:500;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--mu);transition:all 0.3s}
+.ws-word.found{background:rgba(80,250,123,0.1);border-color:rgba(80,250,123,0.3);color:var(--grn);text-decoration:line-through;opacity:0.7}
+.ws-hint{font-size:12px;color:var(--mu);text-align:center;margin-bottom:10px;opacity:0.7}
+.ws-score{text-align:center;font-size:13px;color:var(--mu);margin-top:10px}
+/* Q&A */
+.qa-list{display:flex;flex-direction:column;gap:10px}
+.qa-card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:15px}
+.qa-num{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--lav);margin-bottom:6px}
+.qa-q{font-size:14px;font-weight:500;line-height:1.5;margin-bottom:11px}
+.qa-answer{background:rgba(189,147,249,0.07);border:1px solid rgba(189,147,249,0.2);border-radius:var(--rs);padding:12px;font-size:13px;color:var(--mu);line-height:1.7;display:none;white-space:pre-line;margin-bottom:8px}
+.qa-answer.show{display:block}
+.qa-answer strong{color:var(--txt);font-weight:500}
+.reveal-btn{padding:8px 16px;border-radius:var(--rs);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);font:13px 'Outfit',sans-serif;color:var(--mu);cursor:pointer;transition:all 0.18s}
+.reveal-btn:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.2);color:var(--txt)}
+.reveal-btn.done{display:none}
+/* BUTTONS */
+.btn-p{display:block;width:100%;padding:13px;border-radius:var(--rs);background:linear-gradient(135deg,var(--pink),var(--lav));border:none;font:500 14px 'Outfit',sans-serif;color:#fff;cursor:pointer;transition:opacity 0.18s;margin-top:14px}
+.btn-p:hover{opacity:0.88}
+.btn-g{padding:9px 18px;border-radius:var(--rs);background:var(--card);border:1px solid var(--cb);font:13px 'Outfit',sans-serif;color:var(--mu);cursor:pointer;transition:all 0.18s}
+.btn-g:hover{background:rgba(255,255,255,0.07);color:var(--txt)}
+/* RIDDLE */
+.riddle-card{background:var(--card);border:1px solid var(--cb);border-radius:var(--r);padding:15px;margin-bottom:10px}
+.riddle-q{font-family:'Playfair Display',serif;font-size:14px;line-height:1.6;font-style:italic;margin-bottom:10px;color:var(--txt)}
+.riddle-a{font-size:13px;color:var(--mu);line-height:1.5;display:none;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07)}
+.riddle-a.show{display:block}
+/* SECTION TITLES */
+.sec-title{font-size:10px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--lav);margin-bottom:12px}
+/* ACTIVITY COMPLETE */
+.act-done{text-align:center;padding:16px;background:rgba(80,250,123,0.07);border:1px solid rgba(80,250,123,0.2);border-radius:var(--r);margin-top:12px}
+.act-done p{font-size:13px;color:var(--mu)}
+/* SCORE BAR */
+.score-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:1px solid var(--cb);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px}
+.score-lbl{font-size:12px;color:var(--mu);flex:1}
+.score-val{font-size:16px;font-weight:600;color:var(--txt)}
+/* DIVIDER */
+.div{height:1px;background:rgba(255,255,255,0.06);margin:16px 0}
+@media(max-width:380px){
+  .ws-cell{width:22px;height:22px;font-size:10px}
+  .mi{font-size:11px;padding:9px 10px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const DATA = {chapters:[
+{id:'b2c2',subj:'bio',code:'B2',num:2,title:'Biological Processes',icon:'🌿',
+facts:[
+['Photosynthesis','Carbon dioxide + water → glucose + oxygen. Needs light energy and chlorophyll. Happens in the chloroplasts of plant cells.'],
+['Aerobic respiration','Glucose + oxygen → carbon dioxide + water + energy. Happens in mitochondria. Used by plants and animals constantly.'],
+['Anaerobic respiration (animals)','Glucose → lactic acid + energy. No oxygen needed. Causes muscle cramps during exercise. Produces much less energy than aerobic.'],
+['Fermentation (microorganisms)','Glucose → ethanol + carbon dioxide + energy. Done by yeast. Used to make bread (CO₂ makes dough rise), beer, and wine.'],
+['Xylem','Transports water and dissolved minerals from roots up to leaves. One direction only (upward). Made of dead cells.'],
+['Phloem','Transports dissolved sugars (made in photosynthesis) from leaves to all parts of the plant. Both directions.'],
+['Stomata','Tiny pores mainly on the underside of leaves. Allow gas exchange: CO₂ diffuses in, O₂ diffuses out. Can close to reduce water loss.'],
+['Mineral deficiencies','Nitrates → stunted growth. Phosphates → poor root growth. Potassium → poor leaves and flowers. Magnesium → yellow leaves (no chlorophyll).']
+],
+matching:[
+['Photosynthesis','CO₂ + water → glucose + O₂ (needs light)'],
+['Aerobic respiration','Glucose + O₂ → CO₂ + water + energy'],
+['Fermentation','Glucose → ethanol + CO₂ + energy (in yeast)'],
+['Xylem','Carries water upward from roots to leaves'],
+['Phloem','Carries sugars from leaves to all plant parts'],
+['Stomata','Pores for gas exchange in leaves'],
+['Nitrate deficiency','Causes stunted growth in plants'],
+['Magnesium deficiency','Causes yellow leaves (chlorosis)']
+],
+tf:[
+['Photosynthesis releases carbon dioxide as a waste product',false,'Photosynthesis releases OXYGEN as a by-product. It takes in CO₂. Respiration releases CO₂.'],
+['Aerobic respiration produces lactic acid',false,'Lactic acid is from ANAEROBIC respiration in animals. Aerobic respiration produces CO₂ and water.'],
+['Fermentation is used to make bread, beer, and wine',true,'Yeast ferments sugars anaerobically. The CO₂ makes bread rise; the ethanol makes alcoholic drinks.'],
+['Xylem transports sugars around the plant',false,'Xylem carries water and minerals. PHLOEM carries sugars.'],
+['Stomata are mainly found on the upper surface of leaves',false,'Stomata are mainly on the LOWER surface — away from direct sunlight to reduce water loss.'],
+['Anaerobic respiration produces less energy than aerobic',true,'Aerobic is far more efficient. Anaerobic only partially breaks down glucose, releasing much less energy.'],
+['Magnesium is needed to make chlorophyll',true,'Magnesium is the central atom in chlorophyll molecules. Without it, leaves cannot make chlorophyll and turn yellow.'],
+['Plants absorb minerals through their leaves',false,'Plants absorb water and dissolved minerals through their ROOTS (root hair cells).']
+],
+questions:[
+['Write the complete word equation for photosynthesis.','Carbon dioxide + water → glucose + oxygen\n(Conditions needed: light energy + chlorophyll)'],
+['State TWO differences between aerobic and anaerobic respiration.','1. Aerobic requires oxygen; anaerobic does not\n2. Aerobic produces much more energy (more efficient)\n3. Aerobic products: CO₂ + water; anaerobic in animals: lactic acid; in microorganisms: ethanol + CO₂\n(Any two correct differences)'],
+['Give THREE ways leaves are adapted for photosynthesis. For each, explain how it helps.','1. Flat and wide → large surface area to absorb sunlight\n2. Contain chloroplasts (with chlorophyll) in palisade cells → absorb light energy\n3. Stomata → allow CO₂ to diffuse in for photosynthesis\n4. Thin → short diffusion distance for gases to reach cells\n5. Xylem delivers water; phloem removes glucose products\n(Any three with explanation)'],
+['A plant is not given any nitrates. What symptom would you observe? Explain why.','Stunted/poor growth. Nitrates are needed to make proteins. Without protein, the plant cannot grow new cells and tissues properly.'],
+['What is the role of xylem and phloem? How are they different?','Xylem: transports water and dissolved minerals from roots upward to leaves. One direction only. Made of dead hollow cells.\nPhloem: transports dissolved sugars from leaves to all parts of the plant. Can move in both directions. Made of living cells.'],
+['Describe how yeast is involved in bread-making. Name the process and the products.','Yeast respires anaerobically (fermentation). It breaks down sugars in the dough, producing carbon dioxide and ethanol. The CO₂ forms bubbles, causing the bread to rise. The ethanol evaporates during baking.']
+],
+ws:['GLUCOSE','OXYGEN','CHLOROPHYLL','STOMATA','XYLEM','PHLOEM','FERMENTATION','NITRATE','RESPIRATION'],
+cue:'Make one card per process. Front: name. Back: word equation + conditions.\n\nEssential cards to make:\n• Photosynthesis — equation, needs light + chlorophyll, happens in chloroplasts\n• Aerobic respiration — equation, happens in mitochondria, produces ATP energy\n• Anaerobic in animals — glucose → lactic acid, causes cramps\n• Fermentation (yeast) — glucose → ethanol + CO₂, used for bread/beer/wine\n• Xylem vs Phloem — draw a simple plant, label what each transports and in which direction\n• Mineral deficiencies — make a table: mineral | symptom | why (one card per mineral or one table card)',
+mm:'Central node: BIOLOGICAL PROCESSES\n\nBranch 1: PHOTOSYNTHESIS\n→ Equation (CO₂ + water → glucose + O₂)\n→ Needs: light, chlorophyll\n→ Leaf adaptations (flat, stomata, chloroplasts, thin)\n\nBranch 2: RESPIRATION\n→ Aerobic (with O₂) → equation → mitochondria\n→ Anaerobic (no O₂) → animals (lactic acid) vs microorganisms (fermentation)\n\nBranch 3: TRANSPORT\n→ Xylem (water + minerals, upward)\n→ Phloem (sugars, both ways)\n\nBranch 4: MINERALS\n→ Nitrate → growth (protein)\n→ Phosphate → roots\n→ Potassium → leaves/flowers\n→ Magnesium → chlorophyll',
+tips:['Always write BOTH sides of word equations — examiners give marks for reactants AND products separately','Know the difference between aerobic and anaerobic in ANIMALS vs MICROORGANISMS — they produce different products','For leaf adaptation questions: name the feature → say what it does → explain why it helps photosynthesis. Three steps per point.','Mineral deficiency questions: learn all four minerals and their specific symptom cold — these are easy marks if you know them']},
+
+{id:'b2c3',subj:'bio',code:'B2',num:3,title:'Ecosystems & Adaptation',icon:'🦁',
+facts:[
+['Habitat','The place where an organism lives.'],
+['Population','All organisms of the SAME species living in the same area.'],
+['Community','All the organisms (of ALL species) living in an ecosystem.'],
+['Ecosystem','A community of organisms AND the physical environment they live in.'],
+['Niche','The particular role or place an organism has in its ecosystem. No two species occupy exactly the same niche.'],
+['Predator-prey interdependence','If predator numbers rise → prey numbers fall. If prey falls → predators eventually decline too. Populations cycle together.'],
+['Adaptation','A characteristic that helps an organism survive in its environment. Can be structural (body features), behavioural (actions), or physiological (internal processes).'],
+['Bioaccumulation','Build-up of toxins (e.g. pesticides) along a food chain. Higher predators get the most concentrated dose.']
+],
+matching:[
+['Habitat','Where an organism lives'],
+['Community','ALL species in an area together'],
+['Ecosystem','Community + physical environment'],
+['Niche','The role of an organism in its ecosystem'],
+['Producer','Makes its own food through photosynthesis'],
+['Top predator','Last consumer in a food chain'],
+['Food web','Many food chains connected together'],
+['Bioaccumulation','Toxins build up at higher trophic levels']
+],
+tf:[
+['A population includes all different species in an area',false,'A population = organisms of the SAME species in an area. All species together = a community.'],
+['Producers make their own food through photosynthesis',true,'Producers (plants, algae) are autotrophs — they convert light into glucose through photosynthesis.'],
+['If a prey species disappears, predator numbers will increase',false,'If prey disappears, predators lose their food source and will DECLINE too — they are interdependent.'],
+['Animals compete for food, water, space, and mates',true,'These are the four main things animals compete for. Plants compete for light, water, minerals, and space.'],
+['Bioaccumulation means toxin concentrations get lower up the food chain',false,'Bioaccumulation means concentrations INCREASE going up — each organism eats many from the level below, accumulating all their stored toxins.'],
+['White fur on a polar bear is a behavioural adaptation',false,'White fur is a STRUCTURAL adaptation (a body feature). A behavioural adaptation would be something the animal does, like hibernating.'],
+['Removing one species from a food web affects all connected species',true,'All species in a food web are interdependent. Removing one causes a knock-on effect through all connected populations.'],
+['Plants compete for oxygen',false,'Plants produce oxygen through photosynthesis — they don\'t compete for it. Plants compete for light, water, minerals, and space.']
+],
+questions:[
+['Explain the difference between a population, a community, and an ecosystem.','Population: all organisms of the SAME species in the same area.\nCommunity: ALL organisms (of all species) living in an area together.\nEcosystem: a community PLUS the physical environment (climate, soil, water, temperature, etc.).\n\nExample: in a woodland, all the oak trees = a population. All the trees, birds, insects, fungi, etc. = a community. The community + the woodland soil and climate = an ecosystem.'],
+['Give TWO things animals compete for and TWO things plants compete for.','Animals compete for: food, water, territory/space, mates (any two).\nPlants compete for: light, water, minerals from the soil, space for roots (any two).\n\nNote: plants do NOT compete for food — they make their own through photosynthesis.'],
+['Using a named example, explain what is meant by interdependence.','Interdependence means species in an ecosystem depend on each other for survival.\n\nExample: in a grassland, grass is eaten by rabbits, which are eaten by foxes. If the grass is removed, rabbits lose their food source and decline. As rabbits decline, foxes lose their prey and also decline. All three species depend on each other — a change in one affects all others.'],
+['Describe THREE ways a cactus is adapted to survive in a desert.','1. Thick, swollen stem — stores water for use in dry periods\n2. Spines instead of leaves — greatly reduces surface area and water loss through evaporation; also deters herbivores\n3. Wide shallow roots — quickly absorb large amounts of rainwater when it falls\n4. Waxy outer surface — reduces water loss through the stem\n(Any three with clear explanation of HOW each adaptation helps)'],
+['Describe what would happen to a food web if a prey species near the bottom was removed.','Removing a prey species creates a ripple effect through the entire food web.\n• Predators that depend on that species lose a food source → their numbers fall\n• This may cause other prey species (not affected directly) to increase, because predator pressure on them reduces\n• Predators of those predators may also be affected\nThis shows interdependence: no species in a food web is isolated — all are connected.'],
+['What is bioaccumulation and why is it dangerous?','Bioaccumulation is the build-up of toxins (e.g. DDT pesticides) in organisms as they pass along a food chain. Each animal at a higher level eats many from the level below, so it ingests the toxins stored in all of them.\n\nConcentrations are HIGHEST in top predators, including humans. This is dangerous because: the toxins reach levels high enough to cause serious harm (organ damage, death, reproductive failure) even if the original concentrations were small.']
+],
+ws:['HABITAT','ECOSYSTEM','POPULATION','PREDATOR','CONSUMER','PRODUCER','ADAPTATION','NICHE','COMMUNITY'],
+cue:'Essential cue cards:\n• Key terms: habitat / population / community / ecosystem / niche — definitions with examples on the back\n• Food chain: draw one. Label: producer, primary consumer, secondary consumer, top predator. Draw arrow showing energy direction.\n• Competition: animals (food, water, space, mates) vs plants (light, water, minerals, space) — a table works well\n• Adaptations: make one card each for STRUCTURAL / BEHAVIOURAL / PHYSIOLOGICAL with a real example of each\n• Predator-prey: sketch the oscillating graph (both lines, one slightly behind the other)',
+mm:'Central: ECOSYSTEMS\n\nBranch 1: KEY TERMS\n→ Habitat → Population → Community → Ecosystem → Niche\n(Show the hierarchy: smaller scale to larger scale)\n\nBranch 2: FEEDING RELATIONSHIPS\n→ Food chain → Food web → Producer → Consumer → Predator/Prey\n\nBranch 3: COMPETITION\n→ Animals (4 things) → Plants (4 things)\n\nBranch 4: ADAPTATION\n→ Structural → Behavioural → Physiological\n→ Desert example / Arctic example / Deep sea example\n\nBranch 5: INTERDEPENDENCE\n→ Predator-prey cycles\n→ What happens if one species is removed',
+tips:['For food web "explain" questions: always state what INCREASES and what DECREASES, then say WHY. Marks are for explaining, not just listing.','Habitat vs ecosystem is a common exam trap — habitat = WHERE it lives; ecosystem = the whole system (living + non-living things)','For adaptation questions: name the feature → say what it does → explain HOW it helps survival. Three separate steps per mark.','Competition: plants do NOT compete for food — examiners use this as a distractor. Plants make their own food.']},
+
+{id:'b2c4',subj:'bio',code:'B2',num:4,title:'Inheritance',icon:'🧬',
+facts:[
+['Variation','Differences between individuals of the same species. Can be inherited or environmental.'],
+['Inherited variation','Differences caused by genes passed from parents to offspring. Present from birth regardless of environment.'],
+['Environmental variation','Differences caused by an organism\'s surroundings or experiences (not coded in genes; cannot be inherited).'],
+['Continuous variation','Characteristics that can take any value within a range (e.g. height, mass, hand span). Displayed on a histogram — forms a bell curve.'],
+['Discontinuous variation','Characteristics with only distinct categories, no intermediate values (e.g. blood group, tongue rolling). Displayed on a bar chart.'],
+['DNA','Deoxyribonucleic acid. The molecule that stores all genetic information. Found in the NUCLEUS of cells. Coiled into chromosomes.'],
+['Chromosome','A long coiled section of DNA. Humans have 46 chromosomes (23 pairs) in every cell nucleus. Each chromosome contains many genes.'],
+['Natural selection','The mechanism of evolution: variation → some individuals better adapted → they survive and reproduce → offspring inherit those traits → those traits become more common over generations.']
+],
+matching:[
+['Inherited variation','Differences caused by genes from parents'],
+['Environmental variation','Caused by surroundings — not passed to offspring'],
+['Continuous variation','Any value in a range → shown on a histogram'],
+['Discontinuous variation','Fixed categories only → shown on a bar chart'],
+['DNA','Genetic information stored in the nucleus'],
+['Chromosome','Coiled section of DNA; humans have 46'],
+['Gene','Section of a chromosome coding for one characteristic'],
+['Natural selection','Survival and reproduction of the best-adapted individuals']
+],
+tf:[
+['Height is an example of discontinuous variation',false,'Height is CONTINUOUS — you can be any height in a range, and the distribution forms a bell curve. Blood group is discontinuous.'],
+['DNA is found in the mitochondria of cells',false,'DNA is found in the NUCLEUS. (Mitochondria have a tiny amount of their own DNA, but this won\'t be tested at this level.)'],
+['Humans have 46 chromosomes in 23 pairs',true,'Every human body cell contains 46 chromosomes — 23 pairs. One chromosome from each pair came from each parent.'],
+['Natural selection requires variation within a population',true,'Without variation, there is nothing for selection to act on. All individuals would be equally suited to the environment.'],
+['Environmental variation can be inherited by offspring',false,'Environmental variation (e.g. a scar, a tan) is NOT inherited — it is not coded in the genes and cannot be passed on through reproduction.'],
+['Blood group is an example of continuous variation',false,'Blood group (A, B, AB, O) is DISCONTINUOUS — there are only four categories with no intermediate values.'],
+['Gene banks are collections of living animals',false,'Gene banks store GENETIC MATERIAL (DNA, seeds, sperm, eggs) — not living animals.'],
+['A species becomes extinct when all its organisms die before reproducing',true,'Extinction occurs when the last surviving members of a species die without leaving offspring. No reproduction = no next generation = extinction.']
+],
+questions:[
+['What is the difference between inherited and environmental variation? Give one example of each.','Inherited variation: differences coded in the genes, received from parents. Present from birth and unaffected by environment.\nExample: blood group, eye colour, natural hair colour.\n\nEnvironmental variation: differences caused by an organism\'s environment or experiences. NOT coded in genes — cannot be passed to offspring.\nExample: a scar, a tan, speaking a language, developed muscles from exercise.'],
+['What is the difference between continuous and discontinuous variation? How is data displayed differently for each?','Continuous variation: characteristics that can take any value within a range (e.g. height, mass). There are no gaps between values.\n→ Displayed on a HISTOGRAM (bars touching). Produces a bell-shaped normal distribution curve.\n\nDiscontinuous variation: characteristics with only fixed, distinct categories (e.g. blood group, tongue rolling). No intermediate values exist.\n→ Displayed on a BAR CHART (bars separate).'],
+['Describe the relationship between DNA, chromosomes, and genes.','DNA is the molecule that stores genetic information. It is a very long molecule that coils tightly into chromosomes.\n\nA chromosome is one long length of tightly coiled DNA. Humans have 46 chromosomes (23 pairs) in the nucleus of every cell.\n\nA gene is a specific section of a chromosome. Each gene codes for one characteristic (e.g. eye colour). A chromosome contains many thousands of genes.'],
+['Describe the process of natural selection in four steps.','1. VARIATION: Individuals in a population show variation (differences) due to random mutations or sexual reproduction.\n2. SELECTION PRESSURE: An environmental factor (predator, disease, food scarcity) means not all individuals survive equally.\n3. SURVIVAL OF THE FITTEST: Individuals with advantageous variations are more likely to survive and reproduce.\n4. INHERITANCE: The advantageous traits are passed through genes to the next generation. Over many generations, these traits become more common in the population.'],
+['What is a gene bank and why might it be important?','A gene bank is a store of genetic material (seeds, sperm, eggs, or DNA samples) from species that may be at risk of extinction.\n\nImportance:\n• Preserves genetic diversity that would otherwise be lost\n• Can be used to help restore populations of endangered species\n• Provides material for scientific research\n• Could allow future restoration of recently extinct species if technology allows\n• Maintains genetic resources useful for agriculture and medicine'],
+['Why might a species become extinct? Give two different causes.','Extinction occurs when all individuals of a species die before reproducing.\n\nCause 1: Environmental change — if the climate changes or habitat is destroyed faster than the species can adapt through natural selection, individuals cannot survive long enough to reproduce.\n\nCause 2: Competition from a new species — if a new species is introduced to a habitat (e.g. by humans), it may outcompete the native species for food or space, reducing numbers until extinction occurs.\n\nOther causes: disease, hunting, pollution.']
+],
+ws:['VARIATION','CHROMOSOME','EVOLUTION','INHERITANCE','NATURAL','SELECTION','CONTINUOUS','EXTINCT','GENE','DNA'],
+cue:'Essential cue cards:\n• Inherited vs Environmental variation (definition + 2 examples each; key distinction: is it in the genes?)\n• Continuous vs Discontinuous (definition + graph type + one example each)\n• DNA → Chromosome → Gene hierarchy (draw the structure: cell → nucleus → chromosome → one section = gene)\n• Natural selection: 4-step sequence on one card (variation → selection pressure → survival → inheritance)\n• Extinction: definition + 3 causes + what gene banks do',
+mm:'Central: INHERITANCE & VARIATION\n\nBranch 1: TYPES OF VARIATION\n→ Inherited (genes, from parents) vs Environmental (experience, not inherited)\n\nBranch 2: CONTINUOUS vs DISCONTINUOUS\n→ Continuous (any value, histogram, bell curve, e.g. height)\n→ Discontinuous (categories, bar chart, e.g. blood group)\n\nBranch 3: DNA AND GENES\n→ DNA → coiled into chromosomes → sections = genes\n→ Humans: 46 chromosomes in 23 pairs\n\nBranch 4: NATURAL SELECTION\n→ 4 steps: variation → selection → survival → inheritance → repeat over generations\n\nBranch 5: EXTINCTION AND GENE BANKS\n→ When: all die before reproducing\n→ Causes: habitat change, competition, disease, hunting\n→ Prevention: gene banks (store genetic material)',
+tips:['Know your graph types: continuous = histogram with touching bars; discontinuous = bar chart with gaps. This appears as a choice question frequently.','Natural selection: use all 4 steps. Examiners look for the word "inherit" — the advantageous trait must be passed on or you lose marks.','Inherited vs environmental: the test is "is it in the genes?" A scar is not in the genes; eye colour is. Environmental variation cannot be passed to offspring.','Extinction questions: explain that reproduction fails, not just that "they all died" — examiners want to see you understand the mechanism.']},
+
+{id:'c1c3',subj:'chem',code:'C1',num:3,title:'Reactions',icon:'⚗️',
+facts:[
+['Chemical reaction','A change where atoms are rearranged to form new substances with different properties. Usually irreversible.'],
+['Physical change','A change that does NOT produce new substances (e.g. melting, dissolving, boiling). Usually reversible.'],
+['Conservation of mass','Total mass of products = total mass of reactants. Atoms are rearranged, not created or destroyed.'],
+['Exothermic reaction','Transfers energy TO the surroundings — the temperature increases. Examples: combustion, neutralisation, hand warmers.'],
+['Endothermic reaction','Takes energy FROM the surroundings — the temperature decreases. Examples: thermal decomposition, some cooking reactions.'],
+['Combustion','Fuel + oxygen → carbon dioxide + water (+ energy). A type of oxidation reaction. Exothermic — releases heat and light.'],
+['Thermal decomposition','A substance breaks down into simpler substances when heated. Example: calcium carbonate → calcium oxide + carbon dioxide.'],
+['Reversible reactions','Some reactions can go in both directions — products can react back to reform reactants. Shown with a double-headed arrow (⇌).']
+],
+matching:[
+['Physical change','Reversible — no new substances formed'],
+['Chemical change','New substances with different properties formed'],
+['Conservation of mass','Products weigh the same as reactants'],
+['Exothermic reaction','Heat released to surroundings — temperature rises'],
+['Endothermic reaction','Heat absorbed from surroundings — temperature falls'],
+['Combustion','Fuel + oxygen → CO₂ + water + energy'],
+['Thermal decomposition','Breaking a compound down using heat'],
+['Catalyst','Speeds up a reaction without being used up']
+],
+tf:[
+['In an exothermic reaction, the surroundings get colder',false,'EXOthermic = heat exits to surroundings → temperature RISES. ENDOthermic = heat enters the reaction → surroundings get COOLER.'],
+['Mass always increases during a chemical reaction',false,'Mass is CONSERVED — the total mass of products exactly equals the total mass of reactants. It cannot increase or decrease.'],
+['Dissolving salt in water is a chemical change',false,'Dissolving is a PHYSICAL change. No new substances are formed. The salt can be recovered by evaporation.'],
+['Combustion is an example of an exothermic reaction',true,'Burning (combustion) always releases heat and light. It is one of the most common examples of an exothermic reaction.'],
+['Atoms are created during a chemical reaction',false,'Atoms are NEVER created or destroyed — they are rearranged. This is why mass is conserved.'],
+['Thermal decomposition reactions need energy to get started',true,'Decomposition means "breaking down." Thermal decomposition requires heat energy — it is an endothermic reaction.'],
+['Word equations use the chemical formulae of substances',false,'Word equations use the NAMES of substances. Chemical equations use formulae (e.g. H₂O, CO₂).'],
+['A reversible reaction can go in both directions',true,'Reversible reactions are shown with a double-headed arrow ⇌. The products can react to reform the original reactants.']
+],
+questions:[
+['What is the difference between a chemical change and a physical change? Give one example of each.','Chemical change: atoms are rearranged to form new substances with different properties. Usually irreversible.\nExample: burning wood (ash and gases have completely different properties from the wood).\n\nPhysical change: no new substances are produced. The change is usually reversible.\nExample: melting ice (the water still has the same properties as ice — it is just H₂O in liquid form).'],
+['State the law of conservation of mass. Explain it at the particle level.','The law of conservation of mass states: the total mass of the products in a reaction always equals the total mass of the reactants.\n\nAt the particle level: atoms are never created or destroyed in a chemical reaction — they are simply rearranged into new combinations (new substances). Because the same atoms are present before and after, the total mass cannot change.'],
+['What is the difference between exothermic and endothermic reactions? Give one example of each.','Exothermic: releases heat energy to the surroundings — the temperature of the surroundings increases.\nExamples: combustion, neutralisation, hand warmers, respiration.\n\nEndothermic: absorbs heat energy from the surroundings — the temperature of the surroundings decreases.\nExamples: thermal decomposition, photosynthesis, dissolving ammonium nitrate in water (cold packs).'],
+['Write the word equation for burning magnesium in air. What type of reaction is this?','Magnesium + oxygen → magnesium oxide\n\nThis is a combustion reaction (and also an oxidation reaction — the magnesium gains oxygen). It is exothermic — magnesium burns with a very bright white flame.'],
+['When copper carbonate is heated, it turns black and the mass decreases. Explain why the mass appears to decrease.','When copper carbonate is heated, it thermally decomposes:\nCopper carbonate → copper oxide + carbon dioxide\n\nThe carbon dioxide is a gas — it escapes into the surrounding air. Because mass is conserved (total mass of products = total mass of reactants), but the CO₂ escapes and is not collected, the MEASURED mass of the solid appears to decrease. If the CO₂ were collected and weighed, the total mass would not have changed.'],
+['Classify and explain: (a) burning candle; (b) ice melting; (c) baking a cake.','(a) Burning candle: CHEMICAL change. New substances are formed (CO₂, water, soot). Irreversible. Also EXOTHERMIC — heat and light are released.\n(b) Ice melting: PHYSICAL change. No new substances — still H₂O. Reversible (refreeze it). ENDOTHERMIC — the ice absorbs heat from the surroundings.\n(c) Baking a cake: CHEMICAL change. New substances are formed (the proteins and starches change permanently). Irreversible. Requires heat energy — ENDOTHERMIC from the cake\'s perspective.']
+],
+ws:['EXOTHERMIC','ENDOTHERMIC','COMBUSTION','REACTANT','PRODUCTS','CATALYST','DECOMPOSITION','REACTION','CONSERVATION'],
+cue:'Essential cue cards:\n• Chemical vs Physical change: definition, is it reversible?, example of each\n• Conservation of mass: the law, why it works (atoms rearranged not destroyed), what to say if measured mass changes (gas escaping or absorbed)\n• Exothermic vs Endothermic: definition, temperature change, 2 examples each — a table format works well\n• Combustion: fuel + oxygen → CO₂ + water; state it is exothermic\n• Types of reaction: combustion / decomposition / thermal decomposition — one example equation each',
+mm:'Central: REACTIONS\n\nBranch 1: CHEMICAL vs PHYSICAL\n→ Chemical: new substances, irreversible, atoms rearranged\n→ Physical: no new substances, reversible, state changes\n\nBranch 2: CONSERVATION OF MASS\n→ Products = reactants (in mass)\n→ Why: atoms rearranged not destroyed\n→ Why mass might appear to change: gas escaping\n\nBranch 3: ENERGY CHANGES\n→ Exothermic: heat OUT → temperature rises → examples (combustion, neutralisation)\n→ Endothermic: heat IN → temperature falls → examples (decomposition, photosynthesis)\n\nBranch 4: TYPES OF REACTION\n→ Combustion / Thermal decomposition / Oxidation / Reversible reactions',
+tips:['Exo vs Endo: EXO = heat EXITs to surroundings (gets hot). ENDO = heat ENTERs the reaction from surroundings (gets cold). Use the prefixes.','If mass appears to change, look for gas escaping or being absorbed — always say which gas and why.','For combustion: always state BOTH products — CO₂ AND water. One mark each in most mark schemes.','Chemical vs physical test: "Are new substances formed?" If yes = chemical. If no = physical. Test also: is it reversible?']},
+
+{id:'c1c4',subj:'chem',code:'C1',num:4,title:'Acids and Alkalis',icon:'🧪',
+facts:[
+['pH scale','A scale from 0–14 measuring how acidic or alkaline a solution is. Below 7 = acid. Exactly 7 = neutral. Above 7 = alkali.'],
+['Universal indicator','A mixture of different indicators showing a range of colours for different pH values. Green = neutral (7), red/orange = strongly acidic, purple = strongly alkaline.'],
+['Litmus','Simple indicator: turns RED in acid, BLUE in alkali. Only tells you if acid or alkali — not how acidic.'],
+['Neutralisation','Acid + base (alkali) → salt + water. The reaction that makes a solution neutral. Used to treat soil acidity and indigestion.'],
+['Concentrated vs dilute','Concentrated = more dissolved particles per unit volume = more dangerous. Dilute = fewer particles. Adding water makes it safer.'],
+['Naming salts from hydrochloric acid','Hydrochloric acid reacts with metals/bases to make CHLORIDE salts (e.g. sodium chloride, magnesium chloride).'],
+['Naming salts from sulfuric acid','Sulfuric acid makes SULFATE salts (e.g. copper sulfate, zinc sulfate).'],
+['Naming salts from nitric acid','Nitric acid makes NITRATE salts (e.g. potassium nitrate, calcium nitrate).']
+],
+matching:[
+['pH below 7','Acidic solution'],
+['pH of exactly 7','Neutral solution'],
+['pH above 7','Alkaline solution'],
+['Litmus in acid','Turns red'],
+['Litmus in alkali','Turns blue'],
+['Neutralisation','Acid + base → salt + water'],
+['Hydrochloric acid','Makes chloride salts'],
+['Sulfuric acid','Makes sulfate salts']
+],
+tf:[
+['A pH of 3 is less acidic than a pH of 6',false,'Lower pH = MORE acidic. pH 3 is more acidic than pH 6. pH 0 is the most acidic possible.'],
+['Universal indicator gives more information than litmus',true,'Universal indicator shows approximately how acidic/alkaline (gives a colour linked to a pH number range). Litmus only tells you which side of 7 the solution is on.'],
+['Neutralisation always produces a salt and water',true,'The general equation is: acid + base → salt + water. This applies for all acid-base neutralisation reactions.'],
+['Hydrochloric acid makes sulfate salts',false,'Hydrochloric acid makes CHLORIDE salts. SULFURIC acid makes sulfate salts.'],
+['All bases dissolve in water',false,'An ALKALI is a base that dissolves in water. Not all bases dissolve. Example: copper oxide is a base but is insoluble.'],
+['Acid + metal always produces carbon dioxide',false,'Acid + metal → salt + HYDROGEN gas. Carbon dioxide is produced when carbonates react with acids.'],
+['The corrosive hazard symbol means a chemical can damage skin and eyes',true,'The corrosive symbol (liquid dripping onto a surface and a hand) means the substance can attack and destroy living tissue including skin and eyes.'],
+['You can make a solution neutral by adding the right amount of acid to an alkali',true,'This is neutralisation — adding the correct amount of acid to an alkali (or vice versa) produces a salt and water at pH 7.']
+],
+questions:[
+['A student tests four solutions with universal indicator. Results: red, yellow, green, dark purple. State the approximate pH and whether each is acid/neutral/alkali.','Red → pH 1–3: strongly acidic\nYellow → pH 4–6: weakly acidic\nGreen → pH 7: neutral\nDark purple → pH 12–14: strongly alkaline\n\n(The exact pH range may vary — the key marks are for correctly classifying as acid, neutral, or alkali and giving a reasonable pH estimate.)'],
+['Write the general word equation for neutralisation. Write a specific example using sodium hydroxide and hydrochloric acid.','General: acid + base → salt + water\n\nSpecific: hydrochloric acid + sodium hydroxide → sodium chloride + water\n\n(Sodium chloride is common table salt — NaCl. The water produced is H₂O. This is a neutralisation reaction.)'],
+['Name the salts produced when each of these acids reacts: (a) hydrochloric acid (b) sulfuric acid (c) nitric acid.','(a) Hydrochloric acid → chloride salts\n    Example: magnesium + hydrochloric acid → magnesium chloride + hydrogen\n(b) Sulfuric acid → sulfate salts\n    Example: zinc + sulfuric acid → zinc sulfate + hydrogen\n(c) Nitric acid → nitrate salts\n    Example: copper oxide + nitric acid → copper nitrate + water\n\nRule: the salt name = metal name + acid suffix (chloride/sulfate/nitrate)'],
+['How would you test a gas to show it is hydrogen? What would you observe?','Collect the gas in an inverted test tube held over the reaction.\nApply a lit splint to the mouth of the test tube.\n\nObservation: if hydrogen is present, the gas burns with a distinctive "squeaky pop" sound.\n\n(This is caused by the hydrogen combusting rapidly: hydrogen + oxygen → water)'],
+['Describe how you could use neutralisation to treat acidic soil.','Acidic soil has a pH below 7, which is harmful to most crops. To neutralise it, you add a base (alkali) to the soil — typically powdered calcium hydroxide (lime) or calcium carbonate (chalk/limestone).\n\nThe base reacts with the acid in the soil:\nacid + calcium hydroxide → salt + water\n\nThis raises the pH towards neutral (pH 7), making conditions suitable for crops. The amount added must be carefully controlled — too much would make the soil alkaline.'],
+['Why is a concentrated acid more dangerous than a dilute acid of the same type?','A concentrated acid contains more dissolved acid particles per unit volume than a dilute acid. This means there are more H⁺ ions available to react with and damage materials (including skin and eyes).\n\nA dilute acid has fewer particles — it is less reactive and causes less damage. Adding water to a concentrated acid reduces the concentration, making it safer to handle.\n\n(Note: the corrosive warning symbol should always be on concentrated acid containers.)']
+],
+ws:['NEUTRALISATION','INDICATOR','ALKALI','LITMUS','CHLORIDE','SULFATE','NITRATE','UNIVERSAL','CONCENTRATED'],
+cue:'Essential cue cards:\n• pH scale: draw it 0–14. Label: strongly acidic / weakly acidic / neutral / weakly alkaline / strongly alkaline. Add colour band. Add examples (lemon = 2, milk = 6, water = 7, bleach = 13).\n• Indicators: LITMUS (2 colours: red acid / blue alkali) vs UNIVERSAL (full colour range, gives pH number)\n• Neutralisation: general equation + one specific example. What are salts used for?\n• Salt naming rules: 3 acids and the suffix each gives (chloride / sulfate / nitrate)\n• Tests for gases: hydrogen (squeaky pop), CO₂ (limewater milky), O₂ (relights glowing splint)',
+mm:'Central: ACIDS AND ALKALIS\n\nBranch 1: pH SCALE\n→ 0–14, 7 = neutral, below = acid, above = alkali\n→ Universal indicator colours\n→ Examples of substances at different pH values\n\nBranch 2: INDICATORS\n→ Litmus (2 colours only) vs Universal (full range)\n→ What each one tells you\n\nBranch 3: NEUTRALISATION\n→ Equation: acid + base → salt + water\n→ Uses: treating soil acidity, indigestion remedies\n\nBranch 4: SALT NAMING\n→ HCl → chloride | H₂SO₄ → sulfate | HNO₃ → nitrate\n\nBranch 5: REACTIONS WITH METALS\n→ Acid + metal → salt + hydrogen\n→ Test for hydrogen: squeaky pop',
+tips:['pH scale goes from 0 to 14 (not 1 to 14). pH 0 is the most acidic. This catches many people out.','Litmus tells you acid or alkali. Universal indicator tells you HOW acidic or alkaline. Know the difference and when to use each.','Salt naming: first part = metal (or base), second part = acid suffix. Chloride (HCl), sulfate (H₂SO₄), nitrate (HNO₃). Say these three until automatic.','Acid + metal = salt + HYDROGEN (not CO₂). Acid + carbonate = salt + water + CO₂. These are different and often confused.']},
+
+{id:'c2c3',subj:'chem',code:'C2',num:3,title:'Metals and Acids',icon:'⚙️',
+facts:[
+['Reactivity series','Most → least reactive: K, Na, Li, Ca, Mg, Al, Zn, Fe, Pb, Cu, Ag, Au. Potassium is most reactive; gold is least.'],
+['Metal + oxygen','Most metals react with oxygen to form metal oxides. Magnesium + oxygen → magnesium oxide. Brighter/faster = more reactive.'],
+['Metals with cold water','Very reactive metals (K, Na, Li) react vigorously with cold water → metal hydroxide + hydrogen. Potassium can catch fire.'],
+['Metals with steam','Moderately reactive metals (Mg) react with steam but not cold water → metal oxide + hydrogen.'],
+['Metal + acid reaction','Metal + acid → salt + hydrogen. The more reactive the metal, the faster and more vigorous the reaction. Cu, Ag, Au do NOT react.'],
+['Displacement reaction','A more reactive metal will displace (push out) a less reactive metal from its compound. Fe + CuSO₄ → FeSO₄ + Cu.'],
+['Extraction by electrolysis','Metals MORE reactive than carbon cannot be extracted with carbon. They must be extracted by electrolysis (passing electricity through the molten compound). More expensive.'],
+['Extraction by carbon reduction','Metals LESS reactive than carbon can be extracted by heating with carbon (reduction). Example: iron extracted from iron ore with carbon in a blast furnace.']
+],
+matching:[
+['Most reactive metal','Potassium (K)'],
+['Metal + oxygen','Produces a metal oxide'],
+['Sodium + cold water','Sodium hydroxide + hydrogen'],
+['Metal + acid','Produces salt + hydrogen gas'],
+['Displacement reaction','More reactive metal displaces less reactive from compound'],
+['More reactive than carbon','Extracted by electrolysis'],
+['Less reactive than carbon','Extracted by reduction with carbon'],
+['Test for hydrogen gas','Squeaky pop with a lit splint']
+],
+tf:[
+['Gold reacts vigorously with hydrochloric acid',false,'Gold is one of the LEAST reactive metals. It does not react with dilute acids. Only metals above hydrogen in the reactivity series react with acids.'],
+['Iron can displace copper from copper sulfate solution',true,'Iron is higher (more reactive) than copper. Iron + copper sulfate → iron sulfate + copper. The blue colour fades and copper metal deposits.'],
+['Sodium reacts slowly with cold water',false,'Sodium reacts VIGOROUSLY with cold water — it fizzes rapidly, moves around the surface, and can produce a yellow flame. It is a very reactive metal.'],
+['Aluminium is extracted using carbon in a blast furnace',false,'Aluminium is MORE reactive than carbon so it cannot be extracted by carbon reduction. It must be extracted by ELECTROLYSIS, which is more expensive.'],
+['Metal + acid always produces carbon dioxide',false,'Metal + acid → salt + HYDROGEN (not CO₂). If a carbonate reacts with acid, then CO₂ is produced — but not from a metal.'],
+['When a metal is oxidised, it loses oxygen',false,'Oxidation means gaining oxygen (and losing electrons at A-level). When a metal reacts with oxygen and gains it, the metal is OXIDISED to form a metal oxide.'],
+['A displacement reaction occurs when a less reactive metal is added to a solution of a more reactive metal\'s salt',false,'It is the OPPOSITE: a MORE reactive metal displaces a LESS reactive one from its compound. Less reactive cannot displace more reactive.'],
+['Gold and silver are found as elements in the Earth\'s crust',true,'Because they are very unreactive, gold and silver do not form compounds with other elements. They exist as pure metals in nature.']
+],
+questions:[
+['Write the reactivity series in order from most to least reactive (at least 8 metals).','Most reactive:\nPotassium (K)\nSodium (Na)\nLithium (Li)\nCalcium (Ca)\nMagnesium (Mg)\nAluminium (Al)\nZinc (Zn)\nIron (Fe)\nLead (Pb)\nCopper (Cu)\nSilver (Ag)\nGold (Au) ← least reactive\n\nMemory aid: Please Send Little Children Monkeys And Zebras In Large Cages Safely Guarded'],
+['Describe what you would observe when sodium is added to water. Write a word equation.','Observations:\n• The sodium floats on the water surface\n• It fizzes vigorously, moving rapidly across the surface\n• It melts into a ball (the reaction generates enough heat to melt the metal)\n• May produce a yellow flame (if the hydrogen ignites)\n• The solution turns alkaline (litmus/universal indicator turns blue/purple)\n\nWord equation:\nSodium + water → sodium hydroxide + hydrogen'],
+['A student drops iron filings into blue copper sulfate solution. What would they observe? Write a word equation and explain why this reaction occurs.','Observations:\n• The blue colour of the solution gradually fades (becomes paler, eventually colourless)\n• A reddish-brown solid forms (copper metal depositing on the iron)\n\nWord equation:\nIron + copper sulfate → iron sulfate + copper\n\nExplanation: Iron is HIGHER than copper in the reactivity series — it is more reactive. Iron can therefore displace copper from its compound, taking its place in the solution. This is a displacement reaction.'],
+['Why must aluminium be extracted by electrolysis rather than reduction with carbon?','Aluminium is MORE reactive than carbon in the reactivity series. This means aluminium has a stronger affinity for oxygen than carbon does — carbon cannot remove the oxygen from aluminium oxide.\n\nTo extract aluminium, the aluminium oxide must be melted and then electricity is passed through it (electrolysis). The electrical energy is sufficient to break the strong bonds and separate the aluminium from the oxygen.\n\nThis process is more expensive than carbon reduction because of the large amounts of electrical energy required.'],
+['Predict whether each reaction will occur. Explain your answer: (a) zinc + iron sulfate; (b) copper + zinc sulfate.','(a) Zinc + iron sulfate → WILL OCCUR.\nZinc is MORE reactive than iron in the reactivity series. Zinc can displace iron from iron sulfate.\nZinc + iron sulfate → zinc sulfate + iron\n\n(b) Copper + zinc sulfate → WILL NOT OCCUR.\nCopper is LESS reactive than zinc. Copper cannot displace zinc from its compound. No reaction takes place.'],
+['Why is gold found as a pure metal in the ground, but sodium is never found as a pure metal?','Gold is very unreactive (near the bottom of the reactivity series). It does not react with oxygen, water, or other elements in the environment. Therefore, it stays as a pure metal and can be found as nuggets or flakes in rocks and rivers.\n\nSodium is extremely reactive (near the top of the reactivity series). It reacts immediately and vigorously with water and oxygen in the atmosphere. In nature, sodium is always found bonded to other elements as compounds (e.g. sodium chloride in seawater, sodium carbonate in rocks) — never as a pure metal.']
+],
+ws:['REACTIVITY','DISPLACEMENT','EXTRACTION','OXIDATION','HYDROGEN','ELECTROLYSIS','REDUCTION','MAGNESIUM','POTASSIUM'],
+cue:'Essential cue cards:\n• Reactivity series: write the 12 metals in order + a mnemonic\n• Metal + oxygen: equation (metal + O₂ → metal oxide) + the more reactive, the bigger the reaction\n• Metal + water: 3 tiers: very reactive (K/Na/Li) with cold water → hydroxide + H₂; Mg with steam → oxide + H₂; Cu/Au → no reaction\n• Metal + acid: general equation (salt + hydrogen); which metals don\'t react (below H in series); test for H₂\n• Displacement: definition + worked example (Fe + CuSO₄ → FeSO₄ + Cu)\n• Extraction: "more reactive than carbon → electrolysis; less reactive → carbon reduction" — explain why',
+mm:'Central: METALS\n\nBranch 1: REACTIVITY SERIES\n→ Order K → Na → Li → Ca → Mg → Al → Zn → Fe → Pb → Cu → Ag → Au\n→ Mnemonic\n\nBranch 2: REACTIONS\n→ With oxygen (metal oxide)\n→ With water (3 tiers: cold water / steam / no reaction)\n→ With acids (salt + hydrogen; Cu/Ag/Au don\'t react)\n\nBranch 3: DISPLACEMENT\n→ Definition + rule + example\n→ Iron into copper sulfate (colour change)\n\nBranch 4: EXTRACTION\n→ More reactive than C → electrolysis (expensive)\n→ Less reactive than C → carbon reduction\n→ Why the difference: carbon bond strength',
+tips:['The reactivity series is your central tool. Every prediction question depends on it. Learn it cold — all 12 metals in order.','Displacement: state which metal is MORE reactive AND state which way the reaction goes. Don\'t just say "a reaction occurs."','Metal + acid → salt + HYDROGEN (not CO₂). Carbonate + acid → salt + water + CO₂. These come up together to test if you confuse them.','Extraction explanation: the key phrase is "more reactive than carbon." If yes → electrolysis because carbon cannot remove the oxygen. Say this.']},
+
+{id:'p1c1',subj:'phys',code:'P1',num:1,title:'Forces',icon:'⚡',
+facts:[
+['Force','A push or pull on an object. Measured in Newtons (N) using a newton meter (newtonmeter). Can change speed, direction, or shape.'],
+['Contact forces','Require physical contact: friction, normal reaction force, tension, air resistance, upthrust.'],
+['Non-contact forces','Act at a distance without touching: gravity, magnetic force, electrostatic force.'],
+['Balanced forces','Forces equal in size and opposite in direction — no change in motion. Object stays still OR moves at constant speed.'],
+['Unbalanced forces','A resultant force exists — the object accelerates (speeds up, slows down, or changes direction).'],
+['Friction','A contact force that opposes motion between surfaces. Produces heat. Reduced by lubrication, smooth surfaces, or streamlining.'],
+['Hooke\'s Law','Extension of a spring is directly proportional to the force applied — until the elastic limit. Beyond the elastic limit, the spring is permanently deformed.'],
+['Weight vs mass','Mass = amount of matter in kg (same everywhere). Weight = force due to gravity in N. W = m × g. On Earth g = 10 N/kg.']
+],
+matching:[
+['Contact force example','Friction between two surfaces'],
+['Non-contact force example','Gravity between Earth and Moon'],
+['Balanced forces','Constant velocity (or stationary)'],
+['Unbalanced forces','Object accelerates'],
+['Weight','Gravitational force — measured in Newtons'],
+['Mass','Amount of matter — measured in kilograms'],
+['Hooke\'s Law','Extension ∝ force (up to elastic limit)'],
+['Terminal velocity','When drag equals weight — constant speed']
+],
+tf:[
+['Gravity is a contact force',false,'Gravity is a NON-CONTACT force — it acts across distance without surfaces touching. Contact forces require physical contact.'],
+['If forces on an object are balanced, the object must be stationary',false,'Balanced forces mean CONSTANT VELOCITY — the object could be moving at steady speed OR stationary. Newton\'s 1st Law.'],
+['Weight and mass measure the same thing',false,'Mass = amount of matter (kg, same everywhere). Weight = gravitational force on that mass (N, changes with gravity). Very different.'],
+['Friction always acts opposite to the direction of motion',true,'Friction opposes motion — it always acts in the direction opposing movement or attempted movement.'],
+['On the Moon, your mass would be less than on Earth',false,'Your MASS stays the same everywhere — it\'s the amount of matter in you. Your WEIGHT would be less on the Moon (lower g = 1.6 N/kg vs 10 N/kg on Earth).'],
+['Air resistance increases as an object moves faster',true,'Drag (air resistance) increases with speed. This is why objects reach a terminal velocity — where drag equals the driving force.'],
+['Hooke\'s Law applies at any extension, no matter how large',false,'Hooke\'s Law only applies up to the ELASTIC LIMIT. Beyond this, the spring is permanently deformed and the extension is no longer proportional.'],
+['A force can change the shape of an object',true,'Forces can cause deformation as well as changing speed or direction. Example: stretching a spring, compressing a ball.']
+],
+questions:[
+['State the difference between a contact force and a non-contact force. Give two examples of each.','Contact force: requires physical contact between objects.\nExamples: friction, normal reaction force, tension, air resistance, upthrust.\n\nNon-contact force: acts at a distance without objects touching.\nExamples: gravity (gravitational force), magnetic force, electrostatic force.\n\nThe key test: do the objects need to be touching for the force to act?'],
+['A car travels at a constant speed of 30 m/s on a motorway. What does this tell you about the forces acting on it?','Constant speed means BALANCED FORCES — the forces acting on the car are equal in size and opposite in direction.\n\nThe driving force (from the engine) is equal to the total resistive forces (air resistance + friction). There is no resultant force, so there is no acceleration.\n\nThis is consistent with Newton\'s First Law: an object moving at constant velocity has no net (resultant) force acting on it.'],
+['Calculate the weight of a 75 kg person on Earth (g = 10 N/kg). What would their weight be on Mars where g = 3.8 N/kg? Would their mass change?','On Earth: W = m × g = 75 × 10 = 750 N\n\nOn Mars: W = 75 × 3.8 = 285 N\n\nMass on Mars: 75 kg — mass is the same everywhere. It is the amount of matter and does not change. Only weight changes because weight depends on gravitational field strength.'],
+['Explain Hooke\'s Law. What happens when the elastic limit is exceeded?','Hooke\'s Law states: the extension of a spring is directly proportional to the force applied, provided the elastic limit is not exceeded.\n\nIf force doubles → extension doubles. A force-extension graph shows a straight line through the origin.\n\nThe elastic limit is the point beyond which the spring is permanently deformed. If you exceed the elastic limit:\n• The spring does not return to its original length when the force is removed\n• The force-extension graph curves away from the straight line\n• Hooke\'s Law no longer applies'],
+['Explain why a skydiver reaches a terminal velocity. Use force diagrams in your explanation.','When a skydiver first jumps:\n• Weight (down) > Air resistance (up)\n• Resultant force is downward → accelerates downward\n\nAs speed increases:\n• Air resistance increases (drag increases with speed)\n• The downward resultant force decreases\n\nAt terminal velocity:\n• Weight = Air resistance → balanced forces\n• No resultant force → no acceleration → constant (terminal) velocity\n\nAfter opening the parachute:\n• Air resistance suddenly increases greatly\n• Air resistance > weight → decelerates\n• New, lower terminal velocity reached'],
+['A student investigates Hooke\'s Law. She plots force (x-axis) against extension (y-axis). Describe the shape of the graph and how she identifies the elastic limit.','The graph should show:\n• A straight line starting from the origin (0,0) — this is the region where Hooke\'s Law holds (extension proportional to force)\n• The line then curves, with extensions becoming larger than predicted for each added unit of force\n• This curve begins at the ELASTIC LIMIT\n\nThe elastic limit is identified as the point where the graph first deviates from the straight line.\n\nIf masses are removed beyond the elastic limit, the spring will not return to zero extension — it has been permanently deformed.']
+],
+ws:['FRICTION','GRAVITY','BALANCED','EXTENSION','TERMINAL','NEWTON','TENSION','HOOKE','MAGNETIC','RESULTANT'],
+cue:'Essential cue cards:\n• Contact vs non-contact forces: definitions + 4 examples of each (a table works well)\n• Balanced vs unbalanced forces: definition + what happens to the object + draw arrows (equal vs unequal)\n• Weight formula: W = m × g. Define each term. State units (W in N, m in kg, g in N/kg). Practice calculating with different planets.\n• Hooke\'s Law: statement, sketch the graph (straight line then curve), label elastic limit, what happens beyond it\n• Terminal velocity: 3-stage explanation (accelerating → decelerating → constant speed)',
+mm:'Central: FORCES\n\nBranch 1: TYPES\n→ Contact (friction, tension, normal, air resistance)\n→ Non-contact (gravity, magnetic, electrostatic)\n\nBranch 2: BALANCED vs UNBALANCED\n→ Balanced → constant velocity (or stationary)\n→ Unbalanced → acceleration (resultant force)\n\nBranch 3: FRICTION AND DRAG\n→ Opposes motion\n→ Air resistance increases with speed\n→ Terminal velocity (weight = drag)\n\nBranch 4: WEIGHT AND MASS\n→ W = m × g\n→ Mass constant; weight varies with g\n→ Units: N vs kg\n\nBranch 5: HOOKE\'S LAW\n→ Extension ∝ force (to elastic limit)\n→ Graph: straight line → curve\n→ Elastic limit definition',
+tips:['Balanced forces ≠ stationary. Balanced = constant velocity. The object could be moving at a steady 50 mph. Examiners test this distinction.','Weight formula: W = m × g. Write the units every time. Examiners deduct marks for missing units: W in Newtons (N), m in kg, g in N/kg.','For Hooke\'s Law, always sketch the graph showing the linear section AND where it curves at the elastic limit. This shows understanding beyond just recalling the law.','Non-contact forces: gravity acts between ALL objects with mass. Magnetic only between magnetic materials. Electrostatic only between charged objects.']},
+
+{id:'p1c2',subj:'phys',code:'P1',num:2,title:'Sound',icon:'🔊',
+facts:[
+['Longitudinal wave','Particles oscillate PARALLEL (same direction) to the direction of energy transfer. Sound is a longitudinal wave. Creates compressions and rarefactions.'],
+['Transverse wave','Particles oscillate PERPENDICULAR (at right angles) to the direction of energy transfer. Light, water waves are transverse.'],
+['Amplitude','The maximum displacement of a particle from its rest position. Larger amplitude = louder sound.'],
+['Frequency','The number of complete waves per second. Measured in Hertz (Hz). Higher frequency = higher pitch.'],
+['Wavelength','Distance from one point on a wave to the equivalent point on the next wave (e.g. crest to crest). Measured in metres (m).'],
+['Speed of sound','In air: approximately 340 m/s. In water: ~1500 m/s. In steel: ~5000 m/s. Sound travels FASTEST in solids, slowest in gases.'],
+['Human hearing range','Approximately 20 Hz to 20,000 Hz (20 kHz). Sounds above 20 kHz = ultrasound. Sounds below 20 Hz = infrasound.'],
+['Ultrasound uses','Medical scanning (foetal imaging), sonar (submarine/ship navigation, measuring depth), industrial testing for cracks in materials.']
+],
+matching:[
+['Longitudinal wave','Particles oscillate parallel to energy transfer'],
+['Transverse wave','Particles oscillate perpendicular to energy transfer'],
+['Amplitude','Maximum displacement — determines loudness'],
+['Frequency','Waves per second — determines pitch'],
+['Wavelength','Distance from crest to next crest'],
+['Sound in air','Travels at approximately 340 m/s'],
+['Ultrasound','Frequency above 20,000 Hz'],
+['Decibel (dB)','Unit for measuring the loudness of sound']
+],
+tf:[
+['Sound is a transverse wave',false,'Sound is a LONGITUDINAL wave — particles vibrate in the SAME direction the wave travels. Light is transverse.'],
+['Higher frequency means higher pitch',true,'Frequency determines pitch. Higher frequency = more vibrations per second = higher-pitched sound.'],
+['Sound travels faster in air than in water',false,'Sound travels FASTER in water (1500 m/s) than in air (340 m/s). It travels fastest in solids. Denser media transmit sound faster.'],
+['Amplitude determines the pitch of a sound',false,'Amplitude determines LOUDNESS (volume). FREQUENCY determines pitch. These are commonly confused.'],
+['Sound cannot travel through a vacuum',true,'Sound is a mechanical wave requiring particles to vibrate. A vacuum has no particles, so sound cannot travel through it. Space is silent.'],
+['Humans can hear frequencies above 20,000 Hz',false,'20,000 Hz (20 kHz) is the UPPER limit of human hearing. Sounds above this are ULTRASOUND — not audible to humans.'],
+['Ultrasound can be used to create images of unborn babies',true,'Ultrasound waves are sent into the body, reflect off internal surfaces, and the time of return is used to build up an image.'],
+['Sound waves require a medium to travel through',true,'Sound is a mechanical wave. It needs particles (in a solid, liquid, or gas) to vibrate and pass the energy along. It cannot travel through a vacuum.']
+],
+questions:[
+['Explain the difference between a transverse and a longitudinal wave. Give one example of each.','Transverse wave: particles oscillate (vibrate) PERPENDICULAR to the direction of energy transfer — at right angles to the wave\'s travel direction.\nExamples: light, electromagnetic waves, water surface waves.\n\nLongitudinal wave: particles oscillate PARALLEL to the direction of energy transfer — in the same direction the wave is moving. Creates regions of compression (high pressure) and rarefaction (low pressure).\nExample: sound waves.'],
+['What is the difference between amplitude and frequency? How does each affect what we hear?','Amplitude: the maximum displacement of particles from their rest position. A larger amplitude means the particles vibrate more and carry more energy → produces a LOUDER sound.\n\nFrequency: the number of complete wave cycles per second (Hz). Higher frequency = more vibrations per second → produces a HIGHER PITCH sound.\n\nSummary: amplitude controls loudness; frequency controls pitch.'],
+['Why can\'t sound travel through outer space?','Sound is a mechanical wave — it transfers energy by causing particles to vibrate and bump into neighbouring particles.\n\nOuter space is essentially a vacuum — it contains almost no particles. Without particles, there is nothing to vibrate and pass the energy along. Therefore sound cannot travel through space.\n\n(This is why space is silent despite massive explosions in stars and supernovae.)'],
+['A student claps their hands near a cliff face and hears an echo 0.5 seconds later. The speed of sound is 340 m/s. Calculate the distance to the cliff.','The sound travels TO the cliff and BACK — so the total distance covered = speed × time.\nTotal distance = 340 × 0.5 = 170 m\n\nBut this is the TOTAL path (there and back), so the actual distance to the cliff is:\n170 ÷ 2 = 85 m\n\nThe cliff is 85 metres away.\n\n(Important: always halve the total distance for echo calculations.)'],
+['Describe TWO uses of ultrasound.','1. Medical imaging (prenatal scanning): Ultrasound pulses are transmitted into the body. They reflect off the boundaries between different tissues (including the foetus). The time delay between transmission and detection is used to calculate distances and build up an image on a screen.\n\n2. SONAR (ships/submarines): Ultrasound pulses are sent down through water. They reflect off the seabed (or objects like submarines or shoals of fish). The time for the echo to return is used to calculate depth or detect objects.'],
+['Describe the structure of the ear, naming the parts that sound travels through in order.','Sound travels through the ear in this order:\n1. PINNA: the outer ear — funnels sound waves into the ear\n2. AUDITORY CANAL (ear canal): channel that carries sound to the eardrum\n3. EARDRUM: thin membrane that vibrates when sound waves arrive\n4. OSSICLES: three small bones (malleus, incus, stapes) that amplify and transmit vibrations\n5. COCHLEA: coiled fluid-filled structure that converts vibrations into electrical signals\n6. AUDITORY NERVE: carries electrical signals to the brain\n7. BRAIN: interprets the signals as sound']
+],
+ws:['FREQUENCY','AMPLITUDE','WAVELENGTH','LONGITUDINAL','TRANSVERSE','ULTRASOUND','COCHLEA','COMPRESSION','VIBRATION','DECIBEL'],
+cue:'Essential cue cards:\n• Longitudinal vs transverse: definition + direction of oscillation vs energy transfer + example each\n• Draw a wave and label: amplitude (height), wavelength (crest to crest), frequency (waves per second, Hz)\n• Sound speed in different media: solid (fastest ~5000) > liquid (~1500) > gas (slowest ~340 in air m/s)\n• Ultrasound: frequency > 20kHz; 2 uses: medical scanning, SONAR\n• Ear: draw and label in order — pinna → auditory canal → eardrum → ossicles → cochlea → auditory nerve → brain. Add function of each.',
+mm:'Central: SOUND\n\nBranch 1: WAVE TYPES\n→ Longitudinal (parallel oscillation, sound)\n→ Transverse (perpendicular oscillation, light)\n\nBranch 2: WAVE PROPERTIES\n→ Amplitude → loudness\n→ Frequency (Hz) → pitch\n→ Wavelength → distance crest to crest\n→ Wave equation: speed = frequency × wavelength\n\nBranch 3: SPEED OF SOUND\n→ Solid > liquid > gas\n→ Specific values: 5000 / 1500 / 340 m/s\n→ Cannot travel through vacuum\n\nBranch 4: HEARING\n→ Range: 20 Hz – 20,000 Hz\n→ Ear structure (7 parts in order)\n\nBranch 5: ULTRASOUND\n→ Definition: >20kHz\n→ Uses: medical scanning, SONAR, industrial testing',
+tips:['Sound = LONGITUDINAL, Light = TRANSVERSE. This is the number one exam trap. Longitudinal = particles move in same direction as wave. Transverse = particles move at right angles.','Amplitude = loudness. Frequency = pitch. Swapping these is a very common error. Test yourself: which one changes the volume?','Sound travels FASTEST in solids. Counterintuitive but correct — solid particles are closest together, so vibrations pass faster.','Echo calculation: always divide total distance by 2. The sound makes a return journey — there and back. Forgetting to halve is a very common error.']},
+
+{id:'p1c3',subj:'phys',code:'P1',num:3,title:'Light',icon:'🌈',
+facts:[
+['Law of reflection','Angle of incidence = angle of reflection. Both angles measured from the NORMAL (a line perpendicular to the surface at the point of incidence).'],
+['Refraction','When light changes speed passing from one medium to another, it changes direction. Light bends towards the normal when it slows (enters denser medium like glass).'],
+['Dispersion','White light splits into its constituent colours (spectrum: ROYGBIV) when it passes through a prism. Each colour bends by a different amount — violet bends most, red bends least.'],
+['Primary colours of light','Red, green, and blue. Adding all three together makes white light. Different combinations make other colours.'],
+['Colour and objects','White objects reflect ALL colours of light. Black objects absorb ALL colours. A coloured object reflects its own colour and absorbs all others.'],
+['Converging lens','Thicker in the middle — bends parallel rays to a focal point. Used in cameras, eyes, magnifying glasses.'],
+['The human eye','Cornea → pupil → lens → retina → optic nerve → brain. Most refraction occurs at the cornea. Lens fine-tunes the focus onto the retina.'],
+['Speed of light','Light travels at approximately 3 × 10⁸ m/s (300,000,000 m/s) in a vacuum. Much faster than sound (340 m/s in air).']
+],
+matching:[
+['Law of reflection','Angle of incidence = angle of reflection (from normal)'],
+['Refraction','Light bends when it changes speed in different media'],
+['Dispersion','White light splits into a spectrum through a prism'],
+['Primary colours of light','Red, green, and blue'],
+['White surface','Reflects all colours of light'],
+['Black surface','Absorbs all colours of light'],
+['Converging lens','Focuses parallel rays to a focal point'],
+['Retina','Contains photoreceptors — detects light in the eye']
+],
+tf:[
+['Light travels faster in glass than in air',false,'Light travels SLOWER in glass than in air. It is the slowing down that causes it to bend (refract). Light is fastest in a vacuum/air.'],
+['Angles of reflection are measured from the mirror surface',false,'Angles are ALWAYS measured from the NORMAL — an imaginary line perpendicular to the surface. Not from the surface itself.'],
+['White light is made up of all visible colours',true,'White light is a mixture of all wavelengths (colours) of the visible spectrum. A prism separates them by refracting each colour differently.'],
+['A blue object absorbs blue light',false,'A blue object REFLECTS blue light (which is why we see it as blue) and ABSORBS all other colours.'],
+['Refraction occurs when light hits a surface at exactly 90°',false,'When light hits at exactly 90° (perpendicular, along the normal), it passes straight through without bending. Refraction occurs at all OTHER angles.'],
+['Red, green, and blue light combine to make white light',true,'These are the three primary colours of LIGHT. Mixing them all together produces white light. This is different from mixing paint (subtractive mixing).'],
+['The cornea focuses light more than the lens in the human eye',true,'Most refraction in the eye occurs at the cornea. The lens provides fine adjustment. Many people assume the lens does all the work.'],
+['A converging lens spreads light rays apart',false,'A CONVERGING lens brings rays together (converges them). A DIVERGING lens spreads them apart. Converging = thicker in the middle.']
+],
+questions:[
+['State the law of reflection. What is meant by the "normal" in a reflection diagram?','The law of reflection states: the angle of incidence equals the angle of reflection.\n\nThe NORMAL is an imaginary line drawn perpendicular (at 90°) to the reflecting surface at the exact point where the light ray hits. Both the angle of incidence and the angle of reflection are measured from this normal line — NOT from the surface itself.'],
+['Explain what happens when a ray of light passes from air into glass. Why does it change direction?','When light passes from air into glass:\n1. It slows down — glass is a denser (optically more dense) medium than air\n2. The slowing causes the light to CHANGE DIRECTION\n3. It bends TOWARDS the normal (the angle of refraction is smaller than the angle of incidence)\n\nWhen light passes from glass back into air:\n• It speeds up\n• It bends AWAY from the normal\n\nMemory aid: "towards the normal when it slows (denser medium); away when it speeds up"'],
+['What is dispersion? Why does a prism split white light into colours?','Dispersion is the separation of white light into its component colours (the visible spectrum).\n\nWhite light contains all visible wavelengths (colours) mixed together. When it enters a prism:\n• Each colour (wavelength) travels at a slightly different speed in glass\n• Therefore each colour refracts (bends) by a slightly different amount\n• Violet light bends the MOST; red light bends the LEAST\n• The colours separate, spreading into a spectrum: red → orange → yellow → green → blue → indigo → violet'],
+['A blue filter is placed over a white light source. A red book is placed in the filtered light. What colour does the book appear? Explain.','The book appears BLACK.\n\nA blue filter only allows blue light to pass through — all other colours are absorbed by the filter.\n\nThe red book reflects red light and absorbs all other colours — including blue.\n\nSince there is only blue light available (no red light), and the book absorbs blue light, NO light is reflected from the book. No light reaching our eyes = the book appears black.'],
+['Describe the path of light through the human eye, naming each structure and its function.','1. CORNEA: transparent outer layer — refracts (bends) light; responsible for most of the eye\'s focusing power\n2. PUPIL: opening in the iris — controls how much light enters\n3. IRIS: coloured ring around the pupil — adjusts pupil size\n4. LENS: refracts light to fine-tune the focus; changes shape (accommodation) for near/far objects\n5. RETINA: back wall of the eye — contains photoreceptors (rod cells for low light/movement; cone cells for colour)\n6. OPTIC NERVE: carries electrical signals from the retina to the brain\n7. BRAIN: processes and interprets the signals as a visual image'],
+['Explain the difference between a converging and a diverging lens. What is a focal point?','Converging lens (convex): thicker in the middle, thinner at the edges. Bends parallel rays inward to meet at a FOCAL POINT. Uses: cameras, eyes, magnifying glasses.\n\nDiverging lens (concave): thinner in the middle, thicker at the edges. Bends parallel rays outward — they appear to come from a virtual focal point behind the lens. Uses: glasses for short-sightedness (myopia).\n\nThe FOCAL POINT is the point where parallel rays converge after passing through a converging lens (or appear to diverge from with a diverging lens). The FOCAL LENGTH is the distance from the lens to the focal point.']
+],
+ws:['REFLECTION','REFRACTION','DISPERSION','SPECTRUM','CONVERGING','RETINA','CORNEA','NORMAL','WAVELENGTH','PRISM'],
+cue:'Essential cue cards:\n• Law of reflection: angle in = angle out (from normal). Draw a diagram with the normal as a dotted line.\n• Refraction: definition + "bends towards normal when entering denser medium (slows down)". Draw a ray bending in glass.\n• Dispersion: prism splits white light → ROYGBIV; violet bends most, red bends least\n• Colours: white reflects all / black absorbs all / coloured object reflects its own colour, absorbs others\n• Eye structure: draw and label in order — cornea, pupil, lens, retina, optic nerve, brain. Function of each.',
+mm:'Central: LIGHT\n\nBranch 1: REFLECTION\n→ Law of reflection (i = r)\n→ Angles measured from normal (not surface)\n\nBranch 2: REFRACTION\n→ Light slows → bends towards normal (denser medium)\n→ Light speeds up → bends away from normal\n→ Angle of incidence vs angle of refraction\n\nBranch 3: DISPERSION\n→ Prism + white light → spectrum (ROYGBIV)\n→ Violet bends most, red least\n→ Why: different wavelengths, different speeds\n\nBranch 4: COLOUR\n→ Primary colours: R, G, B → combine = white\n→ White = reflects all; Black = absorbs all\n→ Coloured object: reflects own colour, absorbs rest\n→ Filters and coloured light\n\nBranch 5: EYE\n→ Path of light through eye (6 structures)\n→ Converging vs diverging lens',
+tips:['Always draw the NORMAL as a dotted line perpendicular to the surface in reflection/refraction diagrams. Examiners need it — it shows you know angles are measured from it.','Light bends TOWARDS the normal entering glass (slows down). AWAY from the normal leaving glass (speeds up). Sketch it once and it sticks.','Colour questions: a coloured FILTER only lets through its OWN colour. A coloured OBJECT reflects its own colour, absorbs others. These work differently.','Know the path of light through the eye in order — cornea, pupil, lens, retina, optic nerve, brain. Fill-in-diagram questions are frequent.']}
+]};
+
+
+// STATE
+let ST={screen:'home',chId:null,tab:'study',matchSel:null,matchPairs:[],matchDone:false,tfState:{},wsData:null,wsStart:null,wsFound:new Set(),wsFoundCells:new Set(),qaOpen:new Set(),prog:{}};
+
+function lp(){try{const p=localStorage.getItem('yr8sci');if(p)ST.prog=JSON.parse(p);}catch(e){}}
+function sp(){try{localStorage.setItem('yr8sci',JSON.stringify(ST.prog));}catch(e){}}
+lp();
+
+function mark(chId,act){if(!ST.prog[chId])ST.prog[chId]={};ST.prog[chId][act]=true;sp();}
+function isDone(chId,act){return!!(ST.prog[chId]&&ST.prog[chId][act]);}
+function chPct(chId){const acts=['match','tf','ws','qa'];return Math.round(acts.filter(a=>isDone(chId,a)).length/acts.length*100);}
+function totalPct(){const chs=DATA.chapters;const total=chs.length*4;const done=chs.reduce((s,c)=>s+[['match'],['tf'],['ws'],['qa']].filter(([a])=>isDone(c.id,a)).length,0);return Math.round(done/total*100);}
+
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+
+function generateWS(words,size=13){
+  const g=Array.from({length:size},()=>Array(size).fill(''));
+  const placed=[];
+  const dirs=[[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]];
+  for(const word of words){
+    const w=word.toUpperCase().replace(/\s+/g,'');
+    let done=false;
+    for(let att=0;att<300&&!done;att++){
+      const d=dirs[Math.floor(Math.random()*dirs.length)];
+      let minR=0,maxR=size-1,minC=0,maxC=size-1;
+      if(d[0]>0)maxR=size-w.length;
+      if(d[0]<0){minR=w.length-1;}
+      if(d[1]>0)maxC=size-w.length;
+      if(d[1]<0){minC=w.length-1;}
+      if(maxR<minR||maxC<minC)continue;
+      const r=minR+Math.floor(Math.random()*(maxR-minR+1));
+      const c=minC+Math.floor(Math.random()*(maxC-minC+1));
+      let fits=true;
+      for(let i=0;i<w.length;i++){
+        const nr=r+d[0]*i,nc=c+d[1]*i;
+        if(nr<0||nr>=size||nc<0||nc>=size){fits=false;break;}
+        if(g[nr][nc]!==''&&g[nr][nc]!==w[i]){fits=false;break;}
+      }
+      if(fits){
+        const cells=[];
+        for(let i=0;i<w.length;i++){const nr=r+d[0]*i,nc=c+d[1]*i;g[nr][nc]=w[i];cells.push([nr,nc]);}
+        placed.push({word:w,cells});done=true;
+      }
+    }
+  }
+  const L='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!g[r][c])g[r][c]=L[Math.floor(Math.random()*26)];
+  return{grid:g,placed};
+}
+
+function getSubjColor(subj){return subj==='bio'?'var(--bio)':subj==='chem'?'var(--chem)':'var(--phys)';}
+function getSubjName(subj){return subj==='bio'?'Biology':subj==='chem'?'Chemistry':'Physics';}
+function getChById(id){return DATA.chapters.find(c=>c.id===id);}
+
+function render(){
+  if(ST.screen==='home')document.getElementById('app').innerHTML=renderHome();
+  else if(ST.screen==='chapter')document.getElementById('app').innerHTML=renderChapter();
+  bind();
+}
+
+function renderHome(){
+  const pct=totalPct();
+  const subjects=['bio','chem','phys'];
+  const sicons={bio:'🌿',chem:'⚗️',phys:'⚡'};
+  let html=`<div class="fu">
+<span class="h-crown">✨</span>
+<h1 class="h-title">Year 8 Science Revision</h1>
+<p class="h-sub">9 chapters · Biology, Chemistry, Physics<br>Complete all activities to fill the bar.</p>
+<div class="mp">
+<div class="mp-row"><span class="mp-label">Overall Progress</span><span class="mp-pct">${pct}%</span></div>
+<div class="prog-track"><div class="prog-fill prog-main" style="width:${pct}%"></div></div>
+</div>`;
+  subjects.forEach(subj=>{
+    const chs=DATA.chapters.filter(c=>c.subj===subj);
+    const col=getSubjColor(subj);
+    html+=`<div class="subj-hd"><span class="subj-dot" style="background:${col}"></span>${getSubjName(subj)}</div>`;
+    chs.forEach(ch=>{
+      const p=chPct(ch.id);
+      html+=`<div class="ch-card" data-ch="${ch.id}">
+<div class="ch-card::before" style="display:none"></div>
+<span class="ch-icon">${ch.icon}</span>
+<div class="ch-body">
+<div class="ch-code" style="color:${col}">${ch.code} Chapter ${ch.num}</div>
+<div class="ch-name">${ch.title}</div>
+<div class="ch-micro-track"><div class="ch-micro-fill" style="width:${p}%;background:${col}"></div></div>
+</div>
+<span class="ch-badge">${p}%</span>
+</div>`;
+    });
+  });
+  html+=`</div>`;
+  return html;
+}
+
+function renderChapter(){
+  const ch=getChById(ST.chId);
+  const col=getSubjColor(ch.subj);
+  const tabs=[
+    {id:'study',label:'📖 Study'},
+    {id:'match',label:'🔗 Matching',act:'match'},
+    {id:'tf',label:'✓✗ True/False',act:'tf'},
+    {id:'ws',label:'🔍 Wordsearch',act:'ws'},
+    {id:'qa',label:'❓ Questions',act:'qa'}
+  ];
+  let html=`<div class="ch-screen">
+<div class="ch-nav"><button class="back" id="back-home">← Back</button></div>
+<div class="ch-hdr">
+<div class="ch-hdr-bar" style="background:linear-gradient(90deg,${col},rgba(189,147,249,0.8))"></div>
+<span class="ch-hdr-icon">${ch.icon}</span>
+<div class="ch-hdr-code" style="color:${col}">${ch.code} Chapter ${ch.num}</div>
+<div class="ch-hdr-title">${ch.title}</div>
+<div class="ch-hdr-sub">${getSubjName(ch.subj)} · Complete all 4 activities</div>
+</div>
+<div class="tabs">`;
+  tabs.forEach(t=>{
+    const isActive=ST.tab===t.id;
+    const isDoneTab=t.act&&isDone(ST.chId,t.act);
+    html+=`<button class="tab${isActive?' active':''}${isDoneTab&&!isActive?' done':''}" data-tab="${t.id}">${t.label}${isDoneTab?' ✓':''}</button>`;
+  });
+  html+=`</div>`;
+  if(ST.tab==='study')html+=renderStudy(ch);
+  else if(ST.tab==='match')html+=renderMatch(ch);
+  else if(ST.tab==='tf')html+=renderTF(ch);
+  else if(ST.tab==='ws')html+=renderWS(ch);
+  else if(ST.tab==='qa')html+=renderQA(ch);
+  html+=`</div>`;
+  return html;
+}
+
+function renderStudy(ch){
+  let html=`<p class="sc-intro">Read each term, then click to reveal the definition. Try to say it in your own words before you look.</p>
+<div class="sec-title">Key Terms</div>
+<div class="fact-list">`;
+  ch.facts.forEach((f,i)=>{
+    const open=ST.qaOpen.has('f'+i);
+    html+=`<div class="fact-item${open?' open':''}" data-fact="${i}">
+<div class="fi-term">${f[0]}</div>
+${open?'':'<div class="fi-hint">tap to reveal</div>'}
+<div class="fi-def">${f[1]}</div>
+</div>`;
+  });
+  html+=`</div><div class="div"></div>`;
+  html+=`<div class="sec-title">How to Study This Chapter</div>
+<div class="guide-block">
+<div class="gb-head"><span class="gb-icon">🃏</span><div class="gb-title">Making Cue Cards</div></div>
+<div class="gb-body" style="white-space:pre-line">${ch.cue}</div>
+</div>
+<div class="guide-block">
+<div class="gb-head"><span class="gb-icon">🗺️</span><div class="gb-title">Mindmap Structure</div></div>
+<div class="gb-body" style="white-space:pre-line">${ch.mm}</div>
+</div>
+<div class="guide-block">
+<div class="gb-head"><span class="gb-icon">📓</span><div class="gb-title">Cornell Notes Method</div></div>
+<div class="gb-body">Divide a page into three sections.<br><strong>Left column (narrow):</strong> key terms and questions — write from memory using your knowledge organiser as a check list once you're done.<br><strong>Right column (wide):</strong> definitions, equations, and examples in full sentences.<br><strong>Bottom box:</strong> write a 3-sentence summary of the whole topic in your own words — this is the hardest part and the most useful.<br><br>Test yourself: cover the right column and use only the left to reconstruct the content.</div>
+</div>
+<div class="div"></div>
+<div class="tgt">
+<div class="tgt-head">⭐ Top Grade Strategies</div>`;
+  ch.tips.forEach(t=>{
+    html+=`<div class="tg-item"><span class="tg-star">★</span><span>${t}</span></div>`;
+  });
+  html+=`</div>`;
+  return html;
+}
+
+function renderMatch(ch){
+  const col=getSubjColor(ch.subj);
+  if(ST.matchDone&&isDone(ST.chId,'match')){
+    return`<div class="match-complete"><span class="mc-emoji">🎉</span><p style="font-size:15px;font-weight:600;margin-bottom:6px">All matched — nice work.</p><p style="font-size:13px;color:var(--mu)">This activity is marked complete.</p><button class="btn-p" id="match-again">Try again</button></div>`;
+  }
+  const pairs=ST.matchPairs.length?ST.matchPairs:(()=>{
+    const p=ch.matching.map((m,i)=>({id:i,term:m[0],match:m[1]}));
+    ST.matchPairs=p;ST.matchLeft=shuffle(p.map(x=>({...x,side:'left'})));ST.matchRight=shuffle(p.map(x=>({...x,side:'right'})));
+    return p;
+  })();
+  const matched=new Set(Object.entries(ST.prog[ST.chId]||{}).filter(([k,v])=>k.startsWith('mp')&&v).map(([k])=>parseInt(k.slice(2))));
+  if(!ST.matchLeft)ST.matchLeft=shuffle(pairs.map(x=>({...x,side:'left'})));
+  if(!ST.matchRight)ST.matchRight=shuffle(pairs.map(x=>({...x,side:'right'})));
+  const total=pairs.length;const done=matched.size;
+  let html=`<div class="score-row"><span class="score-lbl">Pairs matched</span><span class="score-val" style="color:${col}">${done} / ${total}</span></div>
+<p style="font-size:13px;color:var(--mu);margin-bottom:12px">Click a term on the left, then click its match on the right.</p>
+<div class="match-grid"><div class="match-col">`;
+  ST.matchLeft.forEach(item=>{
+    const isMatched=matched.has(item.id);
+    const isSel=ST.matchSel&&ST.matchSel.id===item.id&&ST.matchSel.side==='left';
+    html+=`<div class="mi${isMatched?' matched':''}${isSel?' selected':''}" data-mid="${item.id}" data-side="left" data-wrong="${ST.matchWrong===item.id+'-left'?'1':'0'}">${item.term}</div>`;
+  });
+  html+=`</div><div class="match-col">`;
+  ST.matchRight.forEach(item=>{
+    const isMatched=matched.has(item.id);
+    const isSel=ST.matchSel&&ST.matchSel.id===item.id&&ST.matchSel.side==='right';
+    html+=`<div class="mi${isMatched?' matched':''}${isSel?' selected':''}" data-mid="${item.id}" data-side="right">${item.match}</div>`;
+  });
+  html+=`</div></div>`;
+  if(done===total){
+    mark(ST.chId,'match');ST.matchDone=true;
+    html+=`<div class="act-done"><span style="font-size:28px">🎉</span><p style="margin-top:8px;font-weight:600">All matched! Activity complete.</p></div>`;
+  }
+  html+=`<button class="btn-g" id="match-reset" style="margin-top:12px;width:100%">Reset</button>`;
+  return html;
+}
+
+function renderTF(ch){
+  const col=getSubjColor(ch.subj);
+  const answers=ST.tfState||{};
+  const total=ch.tf.length;const done=Object.keys(answers).length;
+  if(done===total&&!isDone(ST.chId,'tf')){mark(ST.chId,'tf');}
+  let html=`<div class="score-row"><span class="score-lbl">Answered</span><span class="score-val" style="color:${col}">${done} / ${total}</span></div>
+<p style="font-size:13px;color:var(--mu);margin-bottom:14px">Read the statement. Decide if it's true or false, then click to find out.</p>
+<div class="tf-list">`;
+  ch.tf.forEach((item,i)=>{
+    const ans=answers[i];
+    html+=`<div class="tf-card">
+<div class="tf-stmt">${item[0]}</div>
+<div class="tf-btns">
+<button class="tf-btn true-btn${ans?` ${ans.chose==='T'?(item[1]?'matched':'wrong'):''}`:''}" data-tfi="${i}" data-ans="T"${ans?' disabled':''}>TRUE</button>
+<button class="tf-btn false-btn${ans?` ${ans.chose==='F'?(!item[1]?'matched':'wrong'):''}`:''}" data-tfi="${i}" data-ans="F"${ans?' disabled':''}>FALSE</button>
+</div>`;
+    if(ans){
+      const correct=ans.chose==='T'?item[1]:!item[1];
+      html+=`<div class="tf-reveal show ${correct?'correct':'wrong'}">
+<div class="tf-result" style="color:${correct?'var(--grn)':'var(--red)'}">${correct?'✓ Correct':'✗ Incorrect'}</div>
+<strong>It is ${item[1]?'TRUE':'FALSE'}.</strong> ${item[2]}
+</div>`;
+    }
+    html+=`</div>`;
+  });
+  html+=`</div>`;
+  if(done===total){
+    const correct=Object.entries(answers).filter(([i,a])=>a.chose==='T'?ch.tf[i][1]:!ch.tf[i][1]).length;
+    html+=`<div class="act-done"><span style="font-size:28px">✨</span><p style="font-weight:600;margin-top:8px">${correct}/${total} correct — activity complete.</p><p style="font-size:12px;color:var(--mu);margin-top:6px">Review any you got wrong in the Study tab.</p></div>`;
+  }
+  html+=`<button class="btn-g" id="tf-reset" style="margin-top:12px;width:100%">Reset</button>`;
+  return html;
+}
+
+function renderWS(ch){
+  const col=getSubjColor(ch.subj);
+  if(!ST.wsData||ST.wsChId!==ST.chId){
+    ST.wsData=generateWS(ch.ws);ST.wsChId=ST.chId;ST.wsStart=null;ST.wsFound=new Set();ST.wsFoundCells=new Set();
+  }
+  const {grid,placed}=ST.wsData;
+  const size=grid.length;
+  const total=placed.length;const found=ST.wsFound.size;
+  if(found===total&&total>0&&!isDone(ST.chId,'ws')){mark(ST.chId,'ws');}
+  let html=`<div class="score-row"><span class="score-lbl">Words found</span><span class="score-val" style="color:${col}">${found} / ${total}</span></div>
+<p class="ws-hint">Click the first letter of a word, then click the last letter. Works horizontally, vertically, and diagonally.</p>
+<div class="ws-container"><div class="ws-grid">`;
+  for(let r=0;r<size;r++){
+    html+=`<div class="ws-row">`;
+    for(let c=0;c<size;c++){
+      const key=`${r},${c}`;
+      const isFound=ST.wsFoundCells.has(key);
+      const isStart=ST.wsStart&&ST.wsStart[0]===r&&ST.wsStart[1]===c;
+      html+=`<div class="ws-cell${isFound?' found':''}${isStart&&!isFound?' start':''}" data-wr="${r}" data-wc="${c}">${grid[r][c]}</div>`;
+    }
+    html+=`</div>`;
+  }
+  html+=`</div></div><div class="ws-words">`;
+  ch.ws.forEach(w=>{
+    const wup=w.toUpperCase();
+    const isFound=placed.some(p=>p.word===wup)&&ST.wsFound.has(wup);
+    html+=`<span class="ws-word${isFound?' found':''}">${w}</span>`;
+  });
+  html+=`</div>`;
+  if(found===total&&total>0){
+    html+=`<div class="act-done" style="margin-top:12px"><span style="font-size:28px">🔍</span><p style="font-weight:600;margin-top:8px">All ${total} words found! Activity complete.</p></div>`;
+  }
+  html+=`<button class="btn-g" id="ws-reset" style="margin-top:12px;width:100%">New puzzle</button>`;
+  return html;
+}
+
+function renderQA(ch){
+  const col=getSubjColor(ch.subj);
+  const shown=ST.qaOpen;
+  const total=ch.questions.length;
+  let html=`<p style="font-size:13px;color:var(--mu);margin-bottom:6px;line-height:1.6">Write your answer first — in your notebook or on paper. Then reveal to check.<br>These are the types of question you will face in the exam.</p>
+<div style="background:rgba(255,209,102,0.07);border:1px solid rgba(255,209,102,0.2);border-radius:var(--rs);padding:11px 14px;font-size:12px;color:var(--mu);margin-bottom:16px;line-height:1.6">
+<strong style="color:var(--gold)">Top tip:</strong> Write your answer before revealing. Examiners award marks for specific key words — so after revealing, check whether you used the right vocabulary.
+</div>
+<div class="qa-list">`;
+  ch.questions.forEach((q,i)=>{
+    const open=shown.has('q'+i);
+    if(open&&i===total-1&&!isDone(ST.chId,'qa')){mark(ST.chId,'qa');}
+    html+=`<div class="qa-card">
+<div class="qa-num">Question ${i+1} of ${total}</div>
+<div class="qa-q">${q[0]}</div>
+<div class="qa-answer${open?' show':''}" style="white-space:pre-line">${q[1]}</div>
+${!open?`<button class="reveal-btn" data-qi="${i}">Show mark scheme answer</button>`:'<p style="font-size:11px;color:var(--mu);margin-top:6px">Check your answer against this — did you hit the key points?</p>'}
+</div>`;
+  });
+  html+=`</div>`;
+  const allOpen=ch.questions.every((_,i)=>shown.has('q'+i));
+  if(allOpen){
+    if(!isDone(ST.chId,'qa'))mark(ST.chId,'qa');
+    html+=`<div class="act-done" style="margin-top:12px"><span style="font-size:28px">📝</span><p style="font-weight:600;margin-top:8px">All questions reviewed — activity complete.</p></div>`;
+  }
+  html+=`<button class="btn-g" id="qa-reset" style="margin-top:12px;width:100%">Hide all answers</button>`;
+  return html;
+}
+
+function wsClick(r,c){
+  if(!ST.wsStart){ST.wsStart=[r,c];render();return;}
+  const[sr,sc]=ST.wsStart;const[er,ec]=[r,c];
+  if(sr===r&&sc===c){ST.wsStart=null;render();return;}
+  const dr=er-sr,dc=ec-sc;
+  if(dr!==0&&dc!==0&&Math.abs(dr)!==Math.abs(dc)){ST.wsStart=[r,c];render();return;}
+  const steps=Math.max(Math.abs(dr),Math.abs(dc));
+  const stepR=steps?dr/steps:0,stepC=steps?dc/steps:0;
+  const path=[];
+  for(let i=0;i<=steps;i++)path.push([sr+i*stepR,sc+i*stepC]);
+  const word=path.map(([pr,pc])=>ST.wsData.grid[pr][pc]).join('');
+  const wordRev=word.split('').reverse().join('');
+  let matched=null;
+  for(const p of ST.wsData.placed){
+    if(!ST.wsFound.has(p.word)&&(word===p.word||wordRev===p.word)){matched=p.word;break;}
+  }
+  if(matched){
+    ST.wsFound.add(matched);
+    for(const[pr,pc]of path)ST.wsFoundCells.add(`${pr},${pc}`);
+    if(ST.wsFound.size===ST.wsData.placed.length&&!isDone(ST.chId,'ws')){mark(ST.chId,'ws');}
+  }
+  ST.wsStart=null;render();
+}
+
+function bind(){
+  document.querySelectorAll('[data-ch]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      ST.screen='chapter';ST.chId=el.dataset.ch;ST.tab='study';
+      ST.matchPairs=[];ST.matchLeft=null;ST.matchRight=null;ST.matchSel=null;ST.matchDone=false;
+      ST.tfState={};ST.wsData=null;ST.wsStart=null;ST.wsFound=new Set();ST.wsFoundCells=new Set();ST.qaOpen=new Set();
+      render();
+    });
+  });
+  const bh=document.getElementById('back-home');
+  if(bh)bh.addEventListener('click',()=>{ST.screen='home';render();});
+  document.querySelectorAll('[data-tab]').forEach(el=>{
+    el.addEventListener('click',()=>{ST.tab=el.dataset.tab;render();});
+  });
+  document.querySelectorAll('[data-fact]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const i=parseInt(el.dataset.fact);
+      const k='f'+i;ST.qaOpen.has(k)?ST.qaOpen.delete(k):ST.qaOpen.add(k);render();
+    });
+  });
+  // Matching
+  document.querySelectorAll('.mi:not(.matched)').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const id=parseInt(el.dataset.mid);const side=el.dataset.side;
+      if(!ST.matchSel){ST.matchSel={id,side};render();return;}
+      if(ST.matchSel.side===side){ST.matchSel={id,side};render();return;}
+      const leftId=side==='right'?ST.matchSel.id:id;
+      const rightId=side==='right'?id:ST.matchSel.id;
+      if(leftId===rightId){
+        if(!ST.prog[ST.chId])ST.prog[ST.chId]={};
+        ST.prog[ST.chId]['mp'+leftId]=true;sp();
+        ST.matchSel=null;render();
+      } else {
+        ST.matchSel=null;
+        el.classList.add('wrong');
+        setTimeout(()=>{el.classList.remove('wrong');render();},500);
+      }
+    });
+  });
+  const mr=document.getElementById('match-reset');
+  if(mr)mr.addEventListener('click',()=>{
+    if(!ST.prog[ST.chId])ST.prog[ST.chId]={};
+    const keys=Object.keys(ST.prog[ST.chId]).filter(k=>k.startsWith('mp'));
+    keys.forEach(k=>delete ST.prog[ST.chId][k]);
+    sp();ST.matchPairs=[];ST.matchLeft=null;ST.matchRight=null;ST.matchSel=null;ST.matchDone=false;render();
+  });
+  const ma=document.getElementById('match-again');
+  if(ma)ma.addEventListener('click',()=>{
+    if(!ST.prog[ST.chId])ST.prog[ST.chId]={};
+    const keys=Object.keys(ST.prog[ST.chId]).filter(k=>k.startsWith('mp'));
+    keys.forEach(k=>delete ST.prog[ST.chId][k]);
+    sp();ST.matchPairs=[];ST.matchLeft=null;ST.matchRight=null;ST.matchSel=null;ST.matchDone=false;render();
+  });
+  // TF
+  document.querySelectorAll('.tf-btn').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const i=parseInt(el.dataset.tfi);const chose=el.dataset.ans;
+      ST.tfState[i]={chose};render();
+    });
+  });
+  const tfr=document.getElementById('tf-reset');
+  if(tfr)tfr.addEventListener('click',()=>{ST.tfState={};render();});
+  // WS
+  document.querySelectorAll('.ws-cell').forEach(el=>{
+    el.addEventListener('click',()=>wsClick(parseInt(el.dataset.wr),parseInt(el.dataset.wc)));
+  });
+  const wsr=document.getElementById('ws-reset');
+  if(wsr)wsr.addEventListener('click',()=>{ST.wsData=null;ST.wsStart=null;ST.wsFound=new Set();ST.wsFoundCells=new Set();render();});
+  // QA
+  document.querySelectorAll('[data-qi]').forEach(el=>{
+    el.addEventListener('click',()=>{ST.qaOpen.add('q'+parseInt(el.dataset.qi));render();});
+  });
+  const qar=document.getElementById('qa-reset');
+  if(qar)qar.addEventListener('click',()=>{ST.qaOpen=new Set();render();});
+}
+
+render();
+</script>
+</body>
+</html>
