@@ -1,0 +1,2063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year 8 Geography Revision Quest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #1a1d2e;
+            --bg-card: #252942;
+            --accent-pink: #ff6b9d;
+            --accent-blue: #4ecdc4;
+            --accent-yellow: #ffe66d;
+            --accent-purple: #a786ff;
+            --accent-green: #5efc8d;
+            --text-light: #f8f9fa;
+            --text-dim: #a8adb7;
+            --success: #5efc8d;
+            --warning: #ff9f43;
+        }
+
+        body {
+            font-family: 'Lexend', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: 18px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header and Progress Bar */
+        header {
+            background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3);
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
+            height: 100%;
+            border-radius: 50px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 10px rgba(94, 252, 141, 0.4);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.15);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation Menu */
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .chapter-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--chapter-color) 0%, var(--chapter-color-dark) 100%);
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--chapter-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .chapter-card.completed {
+            border-color: var(--success);
+        }
+
+        .chapter-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3rem;
+            color: var(--chapter-color);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .chapter-subtitle {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .chapter-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .mini-progress {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .mini-progress-fill {
+            height: 100%;
+            background: var(--chapter-color);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Chapter View */
+        .chapter-content {
+            display: none;
+        }
+
+        .chapter-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-header {
+            background: linear-gradient(135deg, var(--chapter-color) 0%, var(--chapter-color-dark) 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .back-button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--chapter-color);
+        }
+
+        .section-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--chapter-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .timer {
+            background: var(--accent-yellow);
+            color: var(--bg-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Activity Types */
+        .activity-box {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .key-concept {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.2) 0%, rgba(167, 134, 255, 0.2) 100%);
+            border-left: 5px solid var(--accent-blue);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+
+        .key-concept strong {
+            color: var(--accent-yellow);
+        }
+
+        /* Matching Activity */
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .matching-item {
+            background: var(--bg-dark);
+            padding: 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            text-align: center;
+        }
+
+        .matching-item:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-blue);
+        }
+
+        .matching-item.selected {
+            border-color: var(--accent-yellow);
+            background: rgba(255, 230, 109, 0.1);
+        }
+
+        .matching-item.correct {
+            border-color: var(--success);
+            background: rgba(94, 252, 141, 0.1);
+            cursor: default;
+        }
+
+        .matching-item.incorrect {
+            border-color: var(--warning);
+            background: rgba(255, 159, 67, 0.1);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Question Box */
+        .question-box {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(167, 134, 255, 0.1) 100%);
+            border: 3px solid var(--accent-pink);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-pink);
+        }
+
+        .answer-input {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-family: 'Lexend', sans-serif;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
+        }
+
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: rgba(94, 252, 141, 0.2);
+            border: 2px solid var(--success);
+            color: var(--success);
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 159, 67, 0.2);
+            border: 2px solid var(--warning);
+            color: var(--warning);
+            display: block;
+        }
+
+        /* Riddle Box */
+        .riddle-box {
+            background: linear-gradient(135deg, rgba(255, 230, 109, 0.15) 0%, rgba(255, 107, 157, 0.15) 100%);
+            border: 3px solid var(--accent-yellow);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .riddle-text {
+            font-size: 1.3rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--accent-yellow);
+        }
+
+        .reveal-button {
+            background: var(--accent-yellow);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .reveal-button:hover {
+            transform: scale(1.05);
+        }
+
+        .riddle-answer {
+            display: none;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* Drag and Drop */
+        .drag-drop-container {
+            margin: 2rem 0;
+        }
+
+        .draggable-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            min-height: 80px;
+        }
+
+        .draggable-item {
+            background: var(--accent-blue);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: move;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .draggable-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-zones {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .drop-zone {
+            background: var(--bg-dark);
+            border: 3px dashed rgba(255,255,255,0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--accent-yellow);
+            background: rgba(255, 230, 109, 0.1);
+        }
+
+        .drop-zone-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--accent-purple);
+        }
+
+        /* Image Quiz */
+        .image-container {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .quiz-image {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Long Answer Box */
+        .long-answer-box {
+            background: linear-gradient(135deg, rgba(167, 134, 255, 0.1) 0%, rgba(255, 107, 157, 0.1) 100%);
+            border: 3px solid var(--accent-purple);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .long-answer-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            color: var(--accent-purple);
+            margin-bottom: 1rem;
+        }
+
+        .writing-tips {
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid var(--accent-yellow);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .writing-tips ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .writing-tips li {
+            margin-bottom: 0.5rem;
+        }
+
+        .word-count {
+            text-align: right;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Fact Cards */
+        .fact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .fact-card {
+            background: var(--bg-dark);
+            border-left: 5px solid var(--accent-green);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .fact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(94, 252, 141, 0.2);
+        }
+
+        .fact-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .fact-text {
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Complete Button */
+        .complete-section {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(94, 252, 141, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+            border-radius: 15px;
+        }
+
+        .complete-button {
+            background: linear-gradient(135deg, var(--success) 0%, var(--accent-blue) 100%);
+            border: none;
+            padding: 1.2rem 3rem;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            box-shadow: 0 8px 25px rgba(94, 252, 141, 0.3);
+        }
+
+        .complete-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(94, 252, 141, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                font-size: 0.9rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Celebration Effect */
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            z-index: 1000;
+            animation: celebrate 1s ease;
+            pointer-events: none;
+        }
+
+        @keyframes celebrate {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Menu -->
+        <div id="main-menu">
+            <header>
+                <h1>🌍 Year 8 Geography Quest</h1>
+                <div class="progress-container">
+                    <div class="progress-bar" id="overall-progress" style="width: 0%;">
+                        <span id="progress-text">0% Complete</span>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat-box">
+                        <span class="stat-number" id="chapters-completed">0</span>
+                        <span class="stat-label">Chapters Done</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="total-points">0</span>
+                        <span class="stat-label">Points</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="streak-count">0</span>
+                        <span class="stat-label">Day Streak</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="chapter-grid">
+                <!-- Chapter 1 -->
+                <div class="chapter-card" onclick="openChapter(1)" style="--chapter-color: #ff6b9d; --chapter-color-dark: #e85a89;">
+                    <div class="chapter-number">01</div>
+                    <div class="chapter-title">Development Indicators</div>
+                    <div class="chapter-subtitle">Comparing countries & quality of life</div>
+                    <div class="chapter-progress">
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" id="progress-ch1" style="width: 0%;"></div>
+                        </div>
+                        <span id="progress-text-ch1">0/5</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 2 -->
+                <div class="chapter-card" onclick="openChapter(2)" style="--chapter-color: #5efc8d; --chapter-color-dark: #4ad876;">
+                    <div class="chapter-number">02</div>
+                    <div class="chapter-title">Tropical Rainforests</div>
+                    <div class="chapter-subtitle">Ecosystem layers & adaptations</div>
+                    <div class="chapter-progress">
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" id="progress-ch2" style="width: 0%;"></div>
+                        </div>
+                        <span id="progress-text-ch2">0/5</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 3 -->
+                <div class="chapter-card" onclick="openChapter(3)" style="--chapter-color: #ff9f43; --chapter-color-dark: #e88b35;">
+                    <div class="chapter-number">03</div>
+                    <div class="chapter-title">Plate Tectonics</div>
+                    <div class="chapter-subtitle">Earthquakes, volcanoes & impacts</div>
+                    <div class="chapter-progress">
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" id="progress-ch3" style="width: 0%;"></div>
+                        </div>
+                        <span id="progress-text-ch3">0/5</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 4 -->
+                <div class="chapter-card" onclick="openChapter(4)" style="--chapter-color: #4ecdc4; --chapter-color-dark: #3fb8b0;">
+                    <div class="chapter-number">04</div>
+                    <div class="chapter-title">South America</div>
+                    <div class="chapter-subtitle">Countries, cities & urbanization</div>
+                    <div class="chapter-progress">
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" id="progress-ch4" style="width: 0%;"></div>
+                        </div>
+                        <span id="progress-text-ch4">0/5</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 5 -->
+                <div class="chapter-card" onclick="openChapter(5)" style="--chapter-color: #a786ff; --chapter-color-dark: #9270e8;">
+                    <div class="chapter-number">05</div>
+                    <div class="chapter-title">Climate Zones</div>
+                    <div class="chapter-subtitle">Reading climate graphs</div>
+                    <div class="chapter-progress">
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" id="progress-ch5" style="width: 0%;"></div>
+                        </div>
+                        <span id="progress-text-ch5">0/5</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 6 -->
+                <div class="chapter-card" onclick="openChapter(6)" style="--chapter-color: #ffe66d; --chapter-color-dark: #e8d05f;">
+                    <div class="chapter-number">06</div>
+                    <div class="chapter-title">Italy & Migration</div>
+                    <div class="chapter-subtitle">Golden Triangle & economic patterns</div>
+                    <div class="chapter-progress">
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" id="progress-ch6" style="width: 0%;"></div>
+                        </div>
+                        <span id="progress-text-ch6">0/5</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 7 -->
+                <div class="chapter-card" onclick="openChapter(7)" style="--chapter-color: #ff6b9d; --chapter-color-dark: #e85a89;">
+                    <div class="chapter-number">07</div>
+                    <div class="chapter-title">Earth & Seasons</div>
+                    <div class="chapter-subtitle">Orbit, tilt & climate patterns</div>
+                    <div class="chapter-progress">
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" id="progress-ch7" style="width: 0%;"></div>
+                        </div>
+                        <span id="progress-text-ch7">0/5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chapter 1: Development Indicators -->
+        <div id="chapter-1" class="chapter-content" style="--chapter-color: #ff6b9d; --chapter-color-dark: #e85a89;">
+            <div class="chapter-header">
+                <button class="back-button" onclick="backToMenu()">← Back to Menu</button>
+                <h1>Chapter 1: Development Indicators</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Learn how we measure quality of life and compare countries</p>
+            </div>
+
+            <!-- Section 1: Key Concepts -->
+            <div class="section-card">
+                <div class="section-title">
+                    📚 What You Need to Know
+                </div>
+                
+                <div class="key-concept">
+                    <strong>Development Indicators</strong> are measurements that help us understand how developed a country is and what life is like for people living there.
+                </div>
+
+                <div class="fact-grid">
+                    <div class="fact-card">
+                        <div class="fact-emoji">👶</div>
+                        <div class="fact-text"><strong>Birth Rate:</strong> Number of babies born per 1000 people per year. Higher in LEDCs (Less Economically Developed Countries).</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">💀</div>
+                        <div class="fact-text"><strong>Death Rate:</strong> Number of deaths per 1000 people per year. Lower in MEDCs (More Economically Developed Countries).</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🎂</div>
+                        <div class="fact-text"><strong>Life Expectancy:</strong> Average age people live to. Higher in developed countries with better healthcare.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🍎</div>
+                        <div class="fact-text"><strong>Calorie Intake:</strong> How much food people eat daily. Shows if people have enough nutrition.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">👨‍⚕️</div>
+                        <div class="fact-text"><strong>People per Doctor:</strong> How many people share one doctor. Lower number = better healthcare access.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">📖</div>
+                        <div class="fact-text"><strong>Adult Literacy:</strong> % of adults who can read and write. Higher in countries with good education.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Matching Activity -->
+            <div class="section-card">
+                <div class="section-title">
+                    🎯 Activity 1: Match the Indicators
+                    <span class="timer" id="timer-ch1-act1">15:00</span>
+                </div>
+                
+                <p style="margin-bottom: 1.5rem;">Click one item from each column to match them. Click again to unselect.</p>
+                
+                <div class="matching-container" id="matching-ch1">
+                    <div>
+                        <div class="matching-item" data-id="1" onclick="selectMatch(this, 'ch1')">High birth rate</div>
+                        <div class="matching-item" data-id="2" onclick="selectMatch(this, 'ch1')">Low death rate</div>
+                        <div class="matching-item" data-id="3" onclick="selectMatch(this, 'ch1')">High life expectancy</div>
+                        <div class="matching-item" data-id="4" onclick="selectMatch(this, 'ch1')">Low literacy rate</div>
+                    </div>
+                    <div>
+                        <div class="matching-item" data-match="1" onclick="selectMatch(this, 'ch1')">Common in LEDCs</div>
+                        <div class="matching-item" data-match="3" onclick="selectMatch(this, 'ch1')">Sign of good healthcare</div>
+                        <div class="matching-item" data-match="2" onclick="selectMatch(this, 'ch1')">Better medicine & sanitation</div>
+                        <div class="matching-item" data-match="4" onclick="selectMatch(this, 'ch1')">Poor education system</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Brazil vs Italy Riddles -->
+            <div class="section-card">
+                <div class="section-title">
+                    🔍 Activity 2: Development Detective
+                </div>
+                
+                <div class="riddle-box">
+                    <div class="riddle-text">I have a population of 166 million, a birth rate of 26, and people living to age 66 on average. Which country am I?</div>
+                    <button class="reveal-button" onclick="revealAnswer('riddle1')">Reveal Answer</button>
+                    <div class="riddle-answer" id="riddle1">
+                        🇧🇷 Brazil! (These are signs of a developing country with improving healthcare but still high birth rates)
+                    </div>
+                </div>
+
+                <div class="riddle-box">
+                    <div class="riddle-text">I have only 57.7 million people, but my literacy rate is 97% and I have 235 people per doctor. Which country am I?</div>
+                    <button class="reveal-button" onclick="revealAnswer('riddle2')">Reveal Answer</button>
+                    <div class="riddle-answer" id="riddle2">
+                        🇮🇹 Italy! (High literacy and good doctor access shows a developed country)
+                    </div>
+                </div>
+
+                <div class="riddle-box">
+                    <div class="riddle-text">Why does Brazil have a HIGHER birth rate but LOWER death rate than some less developed countries?</div>
+                    <button class="reveal-button" onclick="revealAnswer('riddle3')">Reveal Answer</button>
+                    <div class="riddle-answer" id="riddle3">
+                        Brazil has improving healthcare (lowering death rate) but hasn't fully developed yet (keeping birth rate high). This combination means RAPID POPULATION GROWTH!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Q&A Practice -->
+            <div class="section-card">
+                <div class="section-title">
+                    ✍️ Activity 3: Test Your Knowledge
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Which country has better quality of life overall: Brazil or Italy? Give TWO pieces of evidence.</div>
+                    <textarea class="answer-input" id="answer-ch1-q1" rows="4" placeholder="Type your answer here... Remember to use DATA from the comparison!"></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch1-q1')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch1-q1"></div>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Why do developing countries like Brazil have higher birth rates? Explain ONE reason.</div>
+                    <textarea class="answer-input" id="answer-ch1-q2" rows="3" placeholder="Think about: family planning, education, children as workers..."></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch1-q2')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch1-q2"></div>
+                </div>
+            </div>
+
+            <!-- Section 5: Extended Writing -->
+            <div class="section-card">
+                <div class="section-title">
+                    📝 Activity 4: Extended Response (Practice for 6-mark questions)
+                    <span class="timer">12 minutes</span>
+                </div>
+
+                <div class="long-answer-box">
+                    <div class="long-answer-title">Explain why life expectancy is higher in Italy than Brazil.</div>
+                    
+                    <div class="writing-tips">
+                        <strong>🎯 What the examiner wants:</strong>
+                        <ul>
+                            <li>Compare specific data (Italy 76 years vs Brazil 66 years)</li>
+                            <li>Link to OTHER indicators (doctors, healthcare, calorie intake)</li>
+                            <li>Explain the CAUSES (why does this happen?)</li>
+                            <li>Use geographical vocabulary correctly</li>
+                        </ul>
+                    </div>
+
+                    <textarea class="answer-input" id="extended-ch1" rows="8" placeholder="Start with: Italy has a higher life expectancy than Brazil because..." oninput="updateWordCount('extended-ch1')"></textarea>
+                    <div class="word-count" id="wordcount-extended-ch1">0 words</div>
+                    
+                    <button class="check-button" onclick="saveExtended('ch1')">Save Response</button>
+                </div>
+            </div>
+
+            <!-- Complete Section -->
+            <div class="complete-section">
+                <h3 style="font-family: 'Fredoka', sans-serif; color: var(--accent-green); margin-bottom: 1rem;">Ready to move on?</h3>
+                <button class="complete-button" onclick="completeChapter(1)">Mark Chapter 1 Complete ✓</button>
+            </div>
+        </div>
+
+        <!-- Chapter 2: Rainforests -->
+        <div id="chapter-2" class="chapter-content" style="--chapter-color: #5efc8d; --chapter-color-dark: #4ad876;">
+            <div class="chapter-header">
+                <button class="back-button" onclick="backToMenu()">← Back to Menu</button>
+                <h1>Chapter 2: Tropical Rainforests</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Understand ecosystem structure and how plants adapt</p>
+            </div>
+
+            <!-- Key Concepts -->
+            <div class="section-card">
+                <div class="section-title">📚 Rainforest Layers</div>
+                
+                <div class="key-concept">
+                    Tropical rainforests have <strong>distinct vertical layers</strong>, each with different plants, animals, and conditions. The tallest trees can reach <strong>60 metres</strong>!
+                </div>
+
+                <div class="fact-grid">
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌳</div>
+                        <div class="fact-text"><strong>Emergent Layer (50-60m):</strong> Tallest trees poke through the canopy. Get most sunlight but exposed to wind and rain.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌿</div>
+                        <div class="fact-text"><strong>Canopy (30-50m):</strong> Dense layer of treetops. Most animals live here. Forms a "roof" blocking sunlight below.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🍃</div>
+                        <div class="fact-text"><strong>Understory (10-30m):</strong> Smaller trees, shrubs. Dark and humid. Young trees waiting to grow tall.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌱</div>
+                        <div class="fact-text"><strong>Forest Floor (0-10m):</strong> Very dark. Only 2% of sunlight reaches here. Decomposition happens fast.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drag and Drop Activity -->
+            <div class="section-card">
+                <div class="section-title">
+                    🎯 Activity 1: Layer Sorting Challenge
+                    <span class="timer">10:00</span>
+                </div>
+                
+                <p style="margin-bottom: 1.5rem;">Drag each description to the correct rainforest layer!</p>
+                
+                <div class="drag-drop-container">
+                    <div class="draggable-items" id="drag-items-ch2">
+                        <div class="draggable-item" draggable="true" data-answer="emergent">Tallest trees (50-60m)</div>
+                        <div class="draggable-item" draggable="true" data-answer="canopy">Dense roof of treetops</div>
+                        <div class="draggable-item" draggable="true" data-answer="canopy">Where most animals live</div>
+                        <div class="draggable-item" draggable="true" data-answer="floor">Only 2% of sunlight</div>
+                        <div class="draggable-item" draggable="true" data-answer="floor">Decomposition zone</div>
+                    </div>
+                    
+                    <div class="drop-zones">
+                        <div class="drop-zone" data-layer="emergent">
+                            <div class="drop-zone-label">🌳 Emergent Layer</div>
+                        </div>
+                        <div class="drop-zone" data-layer="canopy">
+                            <div class="drop-zone-label">🌿 Canopy Layer</div>
+                        </div>
+                        <div class="drop-zone" data-layer="floor">
+                            <div class="drop-zone-label">🌱 Forest Floor</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="check-button" onclick="checkDragDrop('ch2')" style="margin-top: 1rem;">Check Answers</button>
+                <div class="feedback" id="feedback-drag-ch2"></div>
+            </div>
+
+            <!-- Plant Adaptations Matching -->
+            <div class="section-card">
+                <div class="section-title">
+                    🌱 Activity 2: Match the Adaptations
+                </div>
+                
+                <div class="key-concept">
+                    Plants have special features (adaptations) that help them survive in the rainforest environment.
+                </div>
+
+                <div class="matching-container" id="matching-ch2">
+                    <div>
+                        <div class="matching-item" data-id="1" onclick="selectMatch(this, 'ch2')">Buttress Roots</div>
+                        <div class="matching-item" data-id="2" onclick="selectMatch(this, 'ch2')">Lianas</div>
+                        <div class="matching-item" data-id="3" onclick="selectMatch(this, 'ch2')">Drip-tip Leaves</div>
+                        <div class="matching-item" data-id="4" onclick="selectMatch(this, 'ch2')">Smooth Bark</div>
+                    </div>
+                    <div>
+                        <div class="matching-item" data-match="3" onclick="selectMatch(this, 'ch2')">Rain runs off quickly</div>
+                        <div class="matching-item" data-match="1" onclick="selectMatch(this, 'ch2')">Support tall trees in shallow soil</div>
+                        <div class="matching-item" data-match="4" onclick="selectMatch(this, 'ch2')">Stops plants growing on trunk</div>
+                        <div class="matching-item" data-match="2" onclick="selectMatch(this, 'ch2')">Woody vines climbing to sunlight</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Explanation Questions -->
+            <div class="section-card">
+                <div class="section-title">
+                    ✍️ Activity 3: Explain the Adaptations
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Why do buttress roots grow ABOVE ground instead of deep underground?</div>
+                    <textarea class="answer-input" id="answer-ch2-q1" rows="3" placeholder="Hint: Think about the soil depth in rainforests..."></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch2-q1')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch2-q1"></div>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">How do lianas help animals in the rainforest?</div>
+                    <textarea class="answer-input" id="answer-ch2-q2" rows="3" placeholder="Think about movement between trees..."></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch2-q2')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch2-q2"></div>
+                </div>
+            </div>
+
+            <!-- Extended Writing -->
+            <div class="section-card">
+                <div class="section-title">
+                    📝 Activity 4: Extended Response
+                    <span class="timer">10 minutes</span>
+                </div>
+
+                <div class="long-answer-box">
+                    <div class="long-answer-title">Describe TWO ways plants have adapted to life in the tropical rainforest.</div>
+                    
+                    <div class="writing-tips">
+                        <strong>🎯 Good answer structure:</strong>
+                        <ul>
+                            <li>Name the adaptation clearly</li>
+                            <li>Describe what it looks like</li>
+                            <li>Explain WHY it helps (the challenge it solves)</li>
+                            <li>Do this for TWO adaptations</li>
+                        </ul>
+                    </div>
+
+                    <textarea class="answer-input" id="extended-ch2" rows="8" placeholder="First adaptation: Buttress roots..." oninput="updateWordCount('extended-ch2')"></textarea>
+                    <div class="word-count" id="wordcount-extended-ch2">0 words</div>
+                    
+                    <button class="check-button" onclick="saveExtended('ch2')">Save Response</button>
+                </div>
+            </div>
+
+            <div class="complete-section">
+                <h3 style="font-family: 'Fredoka', sans-serif; color: var(--accent-green); margin-bottom: 1rem;">Chapter 2 Complete?</h3>
+                <button class="complete-button" onclick="completeChapter(2)">Mark Complete ✓</button>
+            </div>
+        </div>
+
+        <!-- Chapter 3: Plate Tectonics -->
+        <div id="chapter-3" class="chapter-content" style="--chapter-color: #ff9f43; --chapter-color-dark: #e88b35;">
+            <div class="chapter-header">
+                <button class="back-button" onclick="backToMenu()">← Back to Menu</button>
+                <h1>Chapter 3: Plate Tectonics</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Earthquakes, volcanoes, and their impacts on people</p>
+            </div>
+
+            <!-- Key Concepts -->
+            <div class="section-card">
+                <div class="section-title">📚 Understanding Plate Boundaries</div>
+                
+                <div class="key-concept">
+                    The Earth's crust is broken into huge pieces called <strong>tectonic plates</strong>. Where plates meet, we get <strong>earthquakes and volcanoes</strong>. There are three types of plate boundaries.
+                </div>
+
+                <div class="fact-grid">
+                    <div class="fact-card">
+                        <div class="fact-emoji">💥</div>
+                        <div class="fact-text"><strong>Destructive:</strong> Plates collide. Denser oceanic plate sinks under continental plate. Creates volcanoes and earthquakes.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">↔️</div>
+                        <div class="fact-text"><strong>Constructive:</strong> Plates move apart. Magma rises to fill gap. Creates new crust and underwater volcanoes.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🔀</div>
+                        <div class="fact-text"><strong>Conservative:</strong> Plates slide past each other. Friction builds up then releases. Causes earthquakes but NO volcanoes.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌊</div>
+                        <div class="fact-text"><strong>Ocean Trench:</strong> Deep underwater valley where oceanic plate sinks. Found at destructive boundaries.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matching Activity -->
+            <div class="section-card">
+                <div class="section-title">
+                    🎯 Activity 1: Plate Boundary Types
+                </div>
+
+                <div class="matching-container" id="matching-ch3">
+                    <div>
+                        <div class="matching-item" data-id="1" onclick="selectMatch(this, 'ch3')">Destructive</div>
+                        <div class="matching-item" data-id="2" onclick="selectMatch(this, 'ch3')">Constructive</div>
+                        <div class="matching-item" data-id="3" onclick="selectMatch(this, 'ch3')">Conservative</div>
+                        <div class="matching-item" data-id="4" onclick="selectMatch(this, 'ch3')">Subduction</div>
+                    </div>
+                    <div>
+                        <div class="matching-item" data-match="2" onclick="selectMatch(this, 'ch3')">Plates moving apart</div>
+                        <div class="matching-item" data-match="1" onclick="selectMatch(this, 'ch3')">Plates colliding</div>
+                        <div class="matching-item" data-match="4" onclick="selectMatch(this, 'ch3')">Oceanic plate sinking</div>
+                        <div class="matching-item" data-match="3" onclick="selectMatch(this, 'ch3')">Plates sliding sideways</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- L'Aquila Case Study -->
+            <div class="section-card">
+                <div class="section-title">
+                    🇮🇹 Activity 2: L'Aquila Earthquake (Italy, 2009)
+                </div>
+
+                <div class="key-concept">
+                    <strong>Named Example:</strong> You MUST know a specific earthquake or volcanic eruption for the exam. L'Aquila is perfect because it shows BOTH human and physical impacts clearly.
+                </div>
+
+                <div class="riddle-box">
+                    <div class="riddle-text">What were the HUMAN impacts of the L'Aquila earthquake?</div>
+                    <button class="reveal-button" onclick="revealAnswer('riddle-laquila')">Show Answer</button>
+                    <div class="riddle-answer" id="riddle-laquila">
+                        <strong>Human Impacts:</strong><br>
+                        • 309 deaths (many in old buildings)<br>
+                        • Thousands injured<br>
+                        • 67,500 people made homeless<br>
+                        • Historic buildings destroyed<br>
+                        • Hospitals and schools damaged<br>
+                        • People traumatized and afraid
+                    </div>
+                </div>
+
+                <div class="riddle-box">
+                    <div class="riddle-text">What were the PHYSICAL impacts?</div>
+                    <button class="reveal-button" onclick="revealAnswer('riddle-physical')">Show Answer</button>
+                    <div class="riddle-answer" id="riddle-physical">
+                        <strong>Physical Impacts:</strong><br>
+                        • Buildings collapsed into rubble piles<br>
+                        • Roads cracked and became unusable<br>
+                        • Bridges destroyed<br>
+                        • Underground water pipes broken<br>
+                        • Landslides on hillsides<br>
+                        • Ground surface fractured
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions -->
+            <div class="section-card">
+                <div class="section-title">
+                    ✍️ Activity 3: Exam-Style Questions
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Why do earthquakes happen at plate boundaries? (Use the word "friction")</div>
+                    <textarea class="answer-input" id="answer-ch3-q1" rows="3" placeholder="Think about plates moving and getting stuck..."></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch3-q1')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch3-q1"></div>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Why did L'Aquila have so many deaths despite being in a rich country (Italy)?</div>
+                    <textarea class="answer-input" id="answer-ch3-q2" rows="3" placeholder="Think about: buildings, timing, preparation..."></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch3-q2')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch3-q2"></div>
+                </div>
+            </div>
+
+            <!-- Extended Response -->
+            <div class="section-card">
+                <div class="section-title">
+                    📝 Activity 4: Named Example Response
+                    <span class="timer">15 minutes</span>
+                </div>
+
+                <div class="long-answer-box">
+                    <div class="long-answer-title">Using a named example you have studied, explain the impacts of an earthquake or volcanic eruption.</div>
+                    
+                    <div class="writing-tips">
+                        <strong>🎯 ESSENTIAL for high marks:</strong>
+                        <ul>
+                            <li>NAME the place (L'Aquila, Italy)</li>
+                            <li>Give the YEAR (2009)</li>
+                            <li>Separate HUMAN and PHYSICAL impacts</li>
+                            <li>Use SPECIFIC DATA (309 deaths, 67,500 homeless)</li>
+                            <li>Explain WHY impacts were serious</li>
+                        </ul>
+                    </div>
+
+                    <textarea class="answer-input" id="extended-ch3" rows="10" placeholder="The L'Aquila earthquake in Italy (2009) had serious impacts..." oninput="updateWordCount('extended-ch3')"></textarea>
+                    <div class="word-count" id="wordcount-extended-ch3">0 words</div>
+                    
+                    <button class="check-button" onclick="saveExtended('ch3')">Save Response</button>
+                </div>
+            </div>
+
+            <div class="complete-section">
+                <button class="complete-button" onclick="completeChapter(3)">Mark Complete ✓</button>
+            </div>
+        </div>
+
+        <!-- Chapters 4-7 would continue with similar structure... -->
+        <!-- For brevity, I'll create simplified versions -->
+
+        <!-- Chapter 4: South America -->
+        <div id="chapter-4" class="chapter-content" style="--chapter-color: #4ecdc4; --chapter-color-dark: #3fb8b0;">
+            <div class="chapter-header">
+                <button class="back-button" onclick="backToMenu()">← Back to Menu</button>
+                <h1>Chapter 4: South America</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Geography, cities, and urbanization patterns</p>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">📚 Key Geography</div>
+                
+                <div class="fact-grid">
+                    <div class="fact-card">
+                        <div class="fact-emoji">🗺️</div>
+                        <div class="fact-text"><strong>Key Countries:</strong> Brazil, Argentina, Paraguay, Ecuador, Peru, Colombia</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌊</div>
+                        <div class="fact-text"><strong>Atlantic Ocean:</strong> East coast of continent. Major trade route.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🏔️</div>
+                        <div class="fact-text"><strong>Brazilian Highlands:</strong> Raised plateau in central Brazil. Cooler climate.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌊</div>
+                        <div class="fact-text"><strong>Amazon River:</strong> World's largest river by volume. Flows through rainforest.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    🎯 Activity 1: Location Challenge
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Name the cape at the southern tip of South America</div>
+                    <input type="text" class="answer-input" id="answer-ch4-q1" placeholder="Cape ___">
+                    <button class="check-button" onclick="checkAnswer('ch4-q1')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch4-q1"></div>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Which TWO Brazilian cities have seen huge population growth since 1920?</div>
+                    <input type="text" class="answer-input" id="answer-ch4-q2" placeholder="City 1 and City 2">
+                    <button class="check-button" onclick="checkAnswer('ch4-q2')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch4-q2"></div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    📊 Activity 2: Urbanization Patterns
+                </div>
+
+                <div class="key-concept">
+                    <strong>Urbanization</strong> = the movement of people from rural areas to cities. Sao Paulo's population ROCKETED from 1960s onwards, becoming Brazil's largest city.
+                </div>
+
+                <div class="long-answer-box">
+                    <div class="long-answer-title">Describe the pattern of growth shown on the graph for Rio and Sao Paulo.</div>
+                    <div class="writing-tips">
+                        <strong>🎯 Use DATA from the graph:</strong>
+                        <ul>
+                            <li>State starting and ending populations</li>
+                            <li>Use words like "steady," "rapid," "exponential"</li>
+                            <li>Compare the TWO cities</li>
+                            <li>Mention specific decades where changes happened</li>
+                        </ul>
+                    </div>
+                    <textarea class="answer-input" id="extended-ch4" rows="6" placeholder="Both cities start as reasonably big cities for a few decades..." oninput="updateWordCount('extended-ch4')"></textarea>
+                    <div class="word-count" id="wordcount-extended-ch4">0 words</div>
+                    <button class="check-button" onclick="saveExtended('ch4')">Save Response</button>
+                </div>
+            </div>
+
+            <div class="complete-section">
+                <button class="complete-button" onclick="completeChapter(4)">Mark Complete ✓</button>
+            </div>
+        </div>
+
+        <!-- Chapter 5: Climate Zones -->
+        <div id="chapter-5" class="chapter-content" style="--chapter-color: #a786ff; --chapter-color-dark: #9270e8;">
+            <div class="chapter-header">
+                <button class="back-button" onclick="backToMenu()">← Back to Menu</button>
+                <h1>Chapter 5: Climate Zones</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Reading and interpreting climate graphs</p>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">📚 Climate Graph Skills</div>
+                
+                <div class="key-concept">
+                    Climate graphs show <strong>temperature</strong> (line) and <strong>rainfall</strong> (bars) for each month. Learn to recognize patterns quickly!
+                </div>
+
+                <div class="fact-grid">
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌧️</div>
+                        <div class="fact-text"><strong>Equatorial:</strong> Hot all year (25-28°C). High rainfall every month (200mm+). No dry season.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🏜️</div>
+                        <div class="fact-text"><strong>Hot Desert:</strong> Hot in summer (40°C+), warm in winter. Very low rainfall all year (under 250mm total).</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌤️</div>
+                        <div class="fact-text"><strong>Mediterranean:</strong> Hot dry summers, mild wet winters. Rainfall concentrated in winter months.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌦️</div>
+                        <div class="fact-text"><strong>British:</strong> Cool all year (max 18°C). Rain spread evenly across months. Small temperature range.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    🎯 Activity 1: Climate Type Matching
+                </div>
+
+                <div class="matching-container" id="matching-ch5">
+                    <div>
+                        <div class="matching-item" data-id="1" onclick="selectMatch(this, 'ch5')">Highest temp 18°C</div>
+                        <div class="matching-item" data-id="2" onclick="selectMatch(this, 'ch5')">Jan rainfall 240mm</div>
+                        <div class="matching-item" data-id="3" onclick="selectMatch(this, 'ch5')">Very hot in July</div>
+                        <div class="matching-item" data-id="4" onclick="selectMatch(this, 'ch5')">Dry all year</div>
+                    </div>
+                    <div>
+                        <div class="matching-item" data-match="2" onclick="selectMatch(this, 'ch5')">Equatorial</div>
+                        <div class="matching-item" data-match="1" onclick="selectMatch(this, 'ch5')">British</div>
+                        <div class="matching-item" data-match="4" onclick="selectMatch(this, 'ch5')">Hot Desert</div>
+                        <div class="matching-item" data-match="3" onclick="selectMatch(this, 'ch5')">Mediterranean</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    🔍 Activity 2: Climate Detective
+                </div>
+
+                <div class="riddle-box">
+                    <div class="riddle-text">The graph shows mild winters and cool summers, with rain every month. Which climate am I?</div>
+                    <button class="reveal-button" onclick="revealAnswer('riddle-climate1')">Reveal Answer</button>
+                    <div class="riddle-answer" id="riddle-climate1">
+                        British climate! The even temperature and consistent rainfall give it away.
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">How can you tell if a climate graph is from the Northern or Southern hemisphere?</div>
+                    <textarea class="answer-input" id="answer-ch5-q1" rows="3" placeholder="Think about which months are summer..."></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch5-q1')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch5-q1"></div>
+                </div>
+            </div>
+
+            <div class="complete-section">
+                <button class="complete-button" onclick="completeChapter(5)">Mark Complete ✓</button>
+            </div>
+        </div>
+
+        <!-- Chapter 6: Italy & Migration -->
+        <div id="chapter-6" class="chapter-content" style="--chapter-color: #ffe66d; --chapter-color-dark: #e8d05f;">
+            <div class="chapter-header">
+                <button class="back-button" onclick="backToMenu()">← Back to Menu</button>
+                <h1>Chapter 6: Italy & Migration</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Golden Triangle and internal migration patterns</p>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">📚 The Golden Triangle</div>
+                
+                <div class="key-concept">
+                    The <strong>Golden Triangle</strong> is the industrial region in northwest Italy containing three major cities: <strong>Milan, Turin, and Genoa</strong>. This area has excellent transport links and attracts workers from southern Italy.
+                </div>
+
+                <div class="fact-grid">
+                    <div class="fact-card">
+                        <div class="fact-emoji">🏭</div>
+                        <div class="fact-text"><strong>Milan:</strong> Italy's largest city. Centre of fashion and banking. Financial hub.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🚗</div>
+                        <div class="fact-text"><strong>Turin:</strong> Industrial city. Fiat car manufacturing base. Engineering centre.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🚢</div>
+                        <div class="fact-text"><strong>Genoa:</strong> Major port. Trade passes through. Gateway to Europe.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🏛️</div>
+                        <div class="fact-text"><strong>Venice:</strong> Tourist city. Famous canals and old buildings. Outside the Golden Triangle.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    🎯 Activity 1: City Identification
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Which city is described: "An industrial city where Fiat is based"</div>
+                    <input type="text" class="answer-input" id="answer-ch6-q1" placeholder="City name...">
+                    <button class="check-button" onclick="checkAnswer('ch6-q1')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch6-q1"></div>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Which city is described: "A port where much trade passes through"</div>
+                    <input type="text" class="answer-input" id="answer-ch6-q2" placeholder="City name...">
+                    <button class="check-button" onclick="checkAnswer('ch6-q2')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch6-q2"></div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    ✍️ Activity 2: Migration Explanation
+                </div>
+
+                <div class="long-answer-box">
+                    <div class="long-answer-title">Explain why so many migrant workers have moved from the South of Italy to the North.</div>
+                    <div class="writing-tips">
+                        <strong>🎯 Key points to include:</strong>
+                        <ul>
+                            <li>Golden Triangle has jobs (high income, trade, employment)</li>
+                            <li>South has fewer opportunities</li>
+                            <li>Good transport links in the north</li>
+                            <li>Push factors (what makes people leave) AND pull factors (what attracts them)</li>
+                        </ul>
+                    </div>
+                    <textarea class="answer-input" id="extended-ch6" rows="6" placeholder="People have moved north because..." oninput="updateWordCount('extended-ch6')"></textarea>
+                    <div class="word-count" id="wordcount-extended-ch6">0 words</div>
+                    <button class="check-button" onclick="saveExtended('ch6')">Save Response</button>
+                </div>
+            </div>
+
+            <div class="complete-section">
+                <button class="complete-button" onclick="completeChapter(6)">Mark Complete ✓</button>
+            </div>
+        </div>
+
+        <!-- Chapter 7: Earth & Seasons -->
+        <div id="chapter-7" class="chapter-content" style="--chapter-color: #ff6b9d; --chapter-color-dark: #e85a89;">
+            <div class="chapter-header">
+                <button class="back-button" onclick="backToMenu()">← Back to Menu</button>
+                <h1>Chapter 7: Earth & Seasons</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Understanding Earth's orbit and tilt</p>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">📚 Key Concepts</div>
+                
+                <div class="key-concept">
+                    Earth's <strong>tilt</strong> (23.5°) and its <strong>orbit around the Sun</strong> cause the seasons. Different parts of Earth receive different amounts of sunlight throughout the year.
+                </div>
+
+                <div class="fact-grid">
+                    <div class="fact-card">
+                        <div class="fact-emoji">☀️</div>
+                        <div class="fact-text"><strong>Equator:</strong> Always gets DIRECT sun rays. Hot all year. No real seasons.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">❄️</div>
+                        <div class="fact-text"><strong>Poles:</strong> Sun rays hit at LOW angle. Spread over larger area. Very cold.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌍</div>
+                        <div class="fact-text"><strong>March Equinox:</strong> Sun overhead at equator. Equal day/night everywhere. Spring in Northern Hemisphere.</div>
+                    </div>
+                    <div class="fact-card">
+                        <div class="fact-emoji">🌞</div>
+                        <div class="fact-text"><strong>June Solstice:</strong> Sun overhead at Cancer (23.5°N). Summer in Northern Hemisphere. Longest day.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    🎯 Activity 1: Seasons Quiz
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">In December, which hemisphere has summer?</div>
+                    <input type="text" class="answer-input" id="answer-ch7-q1" placeholder="Northern or Southern?">
+                    <button class="check-button" onclick="checkAnswer('ch7-q1')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch7-q1"></div>
+                </div>
+
+                <div class="question-box">
+                    <div class="question-text">Give THREE reasons why the equator is hot but the poles are cold.</div>
+                    <textarea class="answer-input" id="answer-ch7-q2" rows="4" placeholder="1. Direct rays at equator... 2. ..."></textarea>
+                    <button class="check-button" onclick="checkAnswer('ch7-q2')">Check Answer</button>
+                    <div class="feedback" id="feedback-ch7-q2"></div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    🔍 Activity 2: True or False
+                </div>
+
+                <div class="activity-box">
+                    <p style="margin-bottom: 1rem;"><strong>Statement 1:</strong> In December the UK has shorter hours of darkness than light</p>
+                    <button class="check-button" onclick="checkTrueFalse('tf1', false)">True</button>
+                    <button class="check-button" onclick="checkTrueFalse('tf1', true)">False</button>
+                    <div class="feedback" id="feedback-tf1"></div>
+                </div>
+
+                <div class="activity-box">
+                    <p style="margin-bottom: 1rem;"><strong>Statement 2:</strong> In September everywhere has 12 hours dark and 12 hours light</p>
+                    <button class="check-button" onclick="checkTrueFalse('tf2', true)">True</button>
+                    <button class="check-button" onclick="checkTrueFalse('tf2', false)">False</button>
+                    <div class="feedback" id="feedback-tf2"></div>
+                </div>
+
+                <div class="activity-box">
+                    <p style="margin-bottom: 1rem;"><strong>Statement 3:</strong> In December the Antarctic has 24 hours light</p>
+                    <button class="check-button" onclick="checkTrueFalse('tf3', false)">True</button>
+                    <button class="check-button" onclick="checkTrueFalse('tf3', true)">False</button>
+                    <div class="feedback" id="feedback-tf3"></div>
+                </div>
+            </div>
+
+            <div class="complete-section">
+                <button class="complete-button" onclick="completeChapter(7)">Mark Complete ✓</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data structure
+        const userData = {
+            chaptersCompleted: [],
+            chapterProgress: {
+                1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0
+            },
+            totalPoints: 0,
+            streak: 0,
+            lastVisit: null,
+            savedAnswers: {}
+        };
+
+        // Load saved data
+        function loadData() {
+            const saved = localStorage.getItem('geography-revision-y8');
+            if (saved) {
+                Object.assign(userData, JSON.parse(saved));
+                updateStats();
+                updateAllProgress();
+            }
+            checkStreak();
+        }
+
+        // Save data
+        function saveData() {
+            localStorage.setItem('geography-revision-y8', JSON.stringify(userData));
+        }
+
+        // Check and update streak
+        function checkStreak() {
+            const today = new Date().toDateString();
+            const lastVisit = userData.lastVisit;
+            
+            if (lastVisit === today) {
+                // Same day, no change
+                return;
+            }
+            
+            if (lastVisit) {
+                const lastDate = new Date(lastVisit);
+                const todayDate = new Date(today);
+                const diffDays = Math.floor((todayDate - lastDate) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    // Consecutive day
+                    userData.streak += 1;
+                } else if (diffDays > 1) {
+                    // Streak broken
+                    userData.streak = 1;
+                }
+            } else {
+                // First visit
+                userData.streak = 1;
+            }
+            
+            userData.lastVisit = today;
+            saveData();
+            updateStats();
+        }
+
+        // Update statistics display
+        function updateStats() {
+            document.getElementById('chapters-completed').textContent = userData.chaptersCompleted.length;
+            document.getElementById('total-points').textContent = userData.totalPoints;
+            document.getElementById('streak-count').textContent = userData.streak;
+            
+            const overallProgress = (userData.chaptersCompleted.length / 7) * 100;
+            document.getElementById('overall-progress').style.width = overallProgress + '%';
+            document.getElementById('progress-text').textContent = Math.round(overallProgress) + '% Complete';
+        }
+
+        // Update progress bars
+        function updateAllProgress() {
+            for (let i = 1; i <= 7; i++) {
+                const progress = userData.chapterProgress[i] || 0;
+                const progressBar = document.getElementById(`progress-ch${i}`);
+                const progressText = document.getElementById(`progress-text-ch${i}`);
+                
+                if (progressBar) {
+                    progressBar.style.width = (progress * 20) + '%';
+                }
+                if (progressText) {
+                    progressText.textContent = `${progress}/5`;
+                }
+                
+                // Mark as completed
+                if (userData.chaptersCompleted.includes(i)) {
+                    const card = document.querySelector(`[onclick="openChapter(${i})"]`);
+                    if (card) card.classList.add('completed');
+                }
+            }
+        }
+
+        // Open chapter
+        function openChapter(num) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById(`chapter-${num}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Back to menu
+        function backToMenu() {
+            document.querySelectorAll('.chapter-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('main-menu').style.display = 'block';
+            window.scrollTo(0, 0);
+            saveData();
+        }
+
+        // Complete chapter
+        function completeChapter(num) {
+            if (!userData.chaptersCompleted.includes(num)) {
+                userData.chaptersCompleted.push(num);
+                userData.totalPoints += 100;
+                showCelebration();
+            }
+            saveData();
+            updateStats();
+            updateAllProgress();
+            backToMenu();
+        }
+
+        // Show celebration effect
+        function showCelebration() {
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = '🎉';
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 1000);
+        }
+
+        // Matching activity logic
+        let selectedMatches = {};
+        
+        function selectMatch(element, chapter) {
+            const container = element.parentElement.parentElement;
+            const isLeft = element.parentElement === container.firstElementChild;
+            const id = element.dataset.id;
+            const match = element.dataset.match;
+            
+            // Check if already matched
+            if (element.classList.contains('correct')) return;
+            
+            // Toggle selection
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                if (isLeft) {
+                    delete selectedMatches[chapter + '-left'];
+                } else {
+                    delete selectedMatches[chapter + '-right'];
+                }
+                return;
+            }
+            
+            // Clear previous selection in same column
+            Array.from(element.parentElement.children).forEach(child => {
+                if (!child.classList.contains('correct')) {
+                    child.classList.remove('selected');
+                }
+            });
+            
+            // Select this element
+            element.classList.add('selected');
+            
+            if (isLeft) {
+                selectedMatches[chapter + '-left'] = { element, id };
+            } else {
+                selectedMatches[chapter + '-right'] = { element, match };
+            }
+            
+            // Check if we have a pair selected
+            const left = selectedMatches[chapter + '-left'];
+            const right = selectedMatches[chapter + '-right'];
+            
+            if (left && right) {
+                if (left.id === right.match) {
+                    // Correct match
+                    left.element.classList.remove('selected');
+                    right.element.classList.remove('selected');
+                    left.element.classList.add('correct');
+                    right.element.classList.add('correct');
+                    userData.totalPoints += 10;
+                    updateActivityProgress(parseInt(chapter));
+                    delete selectedMatches[chapter + '-left'];
+                    delete selectedMatches[chapter + '-right'];
+                } else {
+                    // Incorrect match
+                    left.element.classList.add('incorrect');
+                    right.element.classList.add('incorrect');
+                    setTimeout(() => {
+                        left.element.classList.remove('selected', 'incorrect');
+                        right.element.classList.remove('selected', 'incorrect');
+                        delete selectedMatches[chapter + '-left'];
+                        delete selectedMatches[chapter + '-right'];
+                    }, 500);
+                }
+            }
+        }
+
+        // Update activity progress
+        function updateActivityProgress(chapter) {
+            if (userData.chapterProgress[chapter] < 5) {
+                userData.chapterProgress[chapter]++;
+                saveData();
+                updateAllProgress();
+            }
+        }
+
+        // Check answer function
+        function checkAnswer(id) {
+            const input = document.getElementById(`answer-${id}`);
+            const feedback = document.getElementById(`feedback-${id}`);
+            const answer = input.value.trim().toLowerCase();
+            
+            // Simple answer checking - customize per question
+            let correct = false;
+            let message = '';
+            
+            // Chapter 1 answers
+            if (id === 'ch1-q1') {
+                if (answer.includes('italy') && (answer.includes('better') || answer.includes('higher'))) {
+                    correct = true;
+                    message = '✓ Correct! Italy has better quality of life with higher literacy, better healthcare, and longer life expectancy.';
+                } else {
+                    message = '✗ Try again. Think about which country has higher life expectancy, better healthcare access, and higher literacy rates.';
+                }
+            } else if (id === 'ch1-q2') {
+                if (answer.includes('education') || answer.includes('family planning') || answer.includes('children') || answer.includes('work')) {
+                    correct = true;
+                    message = '✓ Good answer! Other reasons include: limited family planning, cultural traditions, children helping with work, or lack of education about contraception.';
+                } else {
+                    message = '✗ Think about: Why might families have more children in developing countries?';
+                }
+            }
+            // Chapter 2 answers
+            else if (id === 'ch2-q1') {
+                if (answer.includes('shallow') || answer.includes('soil') || answer.includes('thin')) {
+                    correct = true;
+                    message = '✓ Excellent! The soil is very shallow in rainforests, so roots can\'t go deep. Buttress roots spread wide above ground to support huge trees.';
+                } else {
+                    message = '✗ Think about the depth of soil in tropical rainforests...';
+                }
+            } else if (id === 'ch2-q2') {
+                if (answer.includes('climb') || answer.includes('travel') || answer.includes('move') || answer.includes('network')) {
+                    correct = true;
+                    message = '✓ Perfect! Lianas create a network of "highways" that tree-dwelling animals use to move between trees without coming down to the dangerous forest floor.';
+                } else {
+                    message = '✗ Think about how animals move around in the canopy...';
+                }
+            }
+            // Chapter 3 answers
+            else if (id === 'ch3-q1') {
+                if (answer.includes('friction') && (answer.includes('stuck') || answer.includes('pressure') || answer.includes('energy'))) {
+                    correct = true;
+                    message = '✓ Great explanation! Plates move slowly past each other, friction makes them stick, pressure builds up, then suddenly releases as an earthquake.';
+                } else {
+                    message = '✗ Remember to use the word "friction" and explain what happens when plates get stuck.';
+                }
+            } else if (id === 'ch3-q2') {
+                if (answer.includes('old') || answer.includes('building') || answer.includes('night') || answer.includes('historic')) {
+                    correct = true;
+                    message = '✓ Excellent! Many buildings were old/historic and not earthquake-proof, the earthquake hit at night when people were asleep, and some people didn\'t take warnings seriously.';
+                } else {
+                    message = '✗ Think about: the age of buildings, when it happened, and whether people were prepared.';
+                }
+            }
+            // Chapter 4 answers
+            else if (id === 'ch4-q1') {
+                if (answer.includes('horn')) {
+                    correct = true;
+                    message = '✓ Correct! Cape Horn is at the southern tip of South America.';
+                } else {
+                    message = '✗ Try again. It\'s Cape _____.';
+                }
+            } else if (id === 'ch4-q2') {
+                if ((answer.includes('rio') || answer.includes('janeiro')) && (answer.includes('sao') || answer.includes('paulo'))) {
+                    correct = true;
+                    message = '✓ Perfect! Rio de Janeiro and Sao Paulo have both seen massive population growth, with Sao Paulo becoming Brazil\'s largest city.';
+                } else {
+                    message = '✗ Look at the graph - which two cities are labeled?';
+                }
+            }
+            // Chapter 5 answers
+            else if (id === 'ch5-q1') {
+                if (answer.includes('summer') && (answer.includes('june') || answer.includes('december') || answer.includes('july') || answer.includes('january'))) {
+                    correct = true;
+                    message = '✓ Exactly! Northern hemisphere has summer in June-July (highest temperatures). Southern hemisphere has summer in December-January. Opposite months = opposite hemispheres!';
+                } else {
+                    message = '✗ Think about which months have the highest temperatures...';
+                }
+            }
+            // Chapter 6 answers
+            else if (id === 'ch6-q1') {
+                if (answer.includes('turin')) {
+                    correct = true;
+                    message = '✓ Correct! Turin is the industrial city where Fiat cars are manufactured.';
+                } else {
+                    message = '✗ Think about which city is associated with Fiat...';
+                }
+            } else if (id === 'ch6-q2') {
+                if (answer.includes('genoa')) {
+                    correct = true;
+                    message = '✓ Perfect! Genoa is the major port city where much of Italy\'s trade passes through.';
+                } else {
+                    message = '✗ Which city is on the coast and handles shipping?';
+                }
+            }
+            // Chapter 7 answers
+            else if (id === 'ch7-q1') {
+                if (answer.includes('southern')) {
+                    correct = true;
+                    message = '✓ Correct! In December, the Southern Hemisphere is tilted towards the Sun and has summer.';
+                } else {
+                    message = '✗ Think about which hemisphere has Christmas in summer...';
+                }
+            } else if (id === 'ch7-q2') {
+                const hasDirectRays = answer.includes('direct') || answer.includes('angle');
+                const hasConcentration = answer.includes('concentrated') || answer.includes('smaller area');
+                const hasSpread = answer.includes('spread') || answer.includes('larger area');
+                
+                if ((hasDirectRays || hasConcentration || hasSpread) && answer.length > 50) {
+                    correct = true;
+                    message = '✓ Good answer! Key reasons: 1) Direct rays at equator vs angled rays at poles, 2) Equator rays concentrated in smaller area, 3) Pole rays spread over larger area = less heating.';
+                } else {
+                    message = '✗ You need THREE reasons. Think about: angle of sun rays, area they cover, concentration of heat.';
+                }
+            }
+            
+            if (correct) {
+                feedback.className = 'feedback correct';
+                userData.totalPoints += 20;
+                updateActivityProgress(parseInt(id.split('-')[0].replace('ch', '')));
+                saveData();
+                updateStats();
+            } else {
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.textContent = message;
+        }
+
+        // Reveal answer for riddles
+        function revealAnswer(id) {
+            const answer = document.getElementById(id);
+            answer.style.display = 'block';
+            const chapter = parseInt(id.match(/\d+/)?.[0] || id.includes('laquila') ? 3 : 1);
+            updateActivityProgress(chapter);
+        }
+
+        // True/False checker
+        function checkTrueFalse(id, isTrue) {
+            const feedback = document.getElementById(`feedback-${id}`);
+            let correct = false;
+            
+            if (id === 'tf1' && !isTrue) {
+                correct = true;
+                feedback.textContent = '✓ Correct! In December (winter), the UK has MORE darkness than light - shorter days.';
+            } else if (id === 'tf2' && isTrue) {
+                correct = true;
+                feedback.textContent = '✓ True! At the equinoxes (March and September), everywhere on Earth has 12 hours of daylight and 12 hours of darkness.';
+            } else if (id === 'tf3' && !isTrue) {
+                correct = true;
+                feedback.textContent = '✓ False! In December, the Antarctic (South Pole) is tilted AWAY from the Sun, so it has 24 hours of darkness, not light.';
+            } else {
+                feedback.textContent = '✗ Not quite. Think again about the Earth\'s tilt and seasons...';
+            }
+            
+            if (correct) {
+                feedback.className = 'feedback correct';
+                userData.totalPoints += 15;
+                updateActivityProgress(7);
+                saveData();
+                updateStats();
+            } else {
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        // Drag and drop setup
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setupDragDrop();
+        });
+
+        function setupDragDrop() {
+            const draggables = document.querySelectorAll('.draggable-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            draggables.forEach(item => {
+                item.addEventListener('dragstart', () => {
+                    item.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                });
+            });
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const dragging = document.querySelector('.dragging');
+                    if (dragging) {
+                        zone.appendChild(dragging);
+                    }
+                });
+            });
+        }
+
+        function checkDragDrop(chapter) {
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const feedback = document.getElementById(`feedback-drag-${chapter}`);
+            let allCorrect = true;
+            
+            dropZones.forEach(zone => {
+                const items = zone.querySelectorAll('.draggable-item');
+                const layer = zone.dataset.layer;
+                
+                items.forEach(item => {
+                    if (item.dataset.answer !== layer) {
+                        allCorrect = false;
+                        item.style.border = '3px solid var(--warning)';
+                    } else {
+                        item.style.border = '3px solid var(--success)';
+                    }
+                });
+            });
+            
+            if (allCorrect) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = '🎉 Perfect! All items are in the correct layers!';
+                userData.totalPoints += 30;
+                updateActivityProgress(2);
+                saveData();
+                updateStats();
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = '✗ Some items are in the wrong place. Red borders show incorrect placements.';
+            }
+        }
+
+        // Word counter
+        function updateWordCount(id) {
+            const textarea = document.getElementById(id);
+            const counter = document.getElementById(`wordcount-${id}`);
+            const words = textarea.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+            counter.textContent = words + ' words';
+        }
+
+        // Save extended response
+        function saveExtended(chapter) {
+            const textarea = document.getElementById(`extended-ch${chapter}`);
+            userData.savedAnswers[`extended-ch${chapter}`] = textarea.value;
+            userData.totalPoints += 50;
+            updateActivityProgress(chapter);
+            saveData();
+            updateStats();
+            
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = '💾';
+            document.body.appendChild(celebration);
+            setTimeout(() => celebration.remove(), 1000);
+        }
+    </script>
+</body>
+</html>
